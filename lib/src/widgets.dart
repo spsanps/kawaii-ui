@@ -404,7 +404,8 @@ class _KawaiiProgressState extends State<KawaiiProgress> with SingleTickerProvid
               child: FractionallySizedBox(widthFactor: _fill.value.clamp(0.01, 1.0),
                 child: KawaiiSurface(tactile: false,
                   gloss: GlossLevel.subtle,
-                  shineOpacity: 0.30,
+                  shineStyle: ShineStyle.flat,
+                  shineOpacity: 0.35,
                   shineHeight: 0.40,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(KawaiiBorderRadius.xs),

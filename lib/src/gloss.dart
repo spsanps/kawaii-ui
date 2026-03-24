@@ -14,6 +14,14 @@ enum GlossLevel {
   full,
 }
 
+/// Controls the shine rendering style.
+enum ShineStyle {
+  /// Top-to-transparent gradient (default — looks good on buttons, badges)
+  gradient,
+  /// Flat solid white rectangle (better for thin bars like progress fills)
+  flat,
+}
+
 /// Spacing/sizing tokens derived from the design language.
 class KawaiiTokens {
   KawaiiTokens._();
@@ -74,6 +82,10 @@ class KawaiiSurface extends StatelessWidget {
   /// click on tap in addition to the tactile bounce.
   final VoidCallback? onTap;
 
+  /// Shine rendering style. Gradient (default) for buttons/badges,
+  /// flat for thin elements like progress bars.
+  final ShineStyle shineStyle;
+
   const KawaiiSurface({
     super.key,
     required this.child,
@@ -86,6 +98,7 @@ class KawaiiSurface extends StatelessWidget {
     this.shineHeight = 0.36,
     this.tactile = false,
     this.onTap,
+    this.shineStyle = ShineStyle.gradient,
   });
 
   double get _shine => shineOpacity ?? KawaiiTokens.shineOpacity(gloss);
@@ -156,31 +169,41 @@ class KawaiiSurface extends StatelessWidget {
                 ),
               )),
 
-            // Shine — flat white rectangle at top, fixed pixel height.
-            // Matches React JSX: top:2 left:6 right:6 h:36% borderRadius:10
-            // Uses LayoutBuilder to compute height from parent.
+            // Shine — two styles, both unified in KawaiiSurface
             if (_shine > 0)
-              Positioned.fill(child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final h = constraints.maxHeight;
-                  final shineH = h.isFinite ? (h * shineHeight).clamp(4.0, 20.0) : 8.0;
-                  return Padding(
-                    padding: EdgeInsets.only(top: 2, left: _isCircle ? h * 0.15 : 6, right: _isCircle ? h * 0.15 : 6),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        height: shineH,
-                        decoration: BoxDecoration(
-                          borderRadius: _isCircle
-                              ? BorderRadius.circular(999)
-                              : BorderRadius.circular(10),
-                          color: Colors.white.withValues(alpha: _shine),
-                        ),
+              shineStyle == ShineStyle.gradient
+                // Gradient: top-to-transparent fade (buttons, badges, cards)
+                ? Positioned.fill(child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.0, shineHeight * 0.5, shineHeight],
+                        colors: [
+                          Colors.white.withValues(alpha: _shine),
+                          Colors.white.withValues(alpha: _shine * 0.12),
+                          Colors.transparent,
+                        ],
                       ),
                     ),
-                  );
-                },
-              )),
+                  ))
+                // Flat: solid white rectangle (progress bars, thin elements)
+                : Positioned.fill(child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final h = constraints.maxHeight;
+                      final shineH = h.isFinite ? (h * shineHeight).clamp(4.0, 14.0) : 6.0;
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 2, left: 5, right: 5),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(height: shineH, decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: Colors.white.withValues(alpha: _shine),
+                          )),
+                        ),
+                      );
+                    },
+                  )),
 
             // Content ON TOP (highest z-order, like CSS z-index: 1)
             Padding(padding: padding, child: child),
