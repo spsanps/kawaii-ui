@@ -132,7 +132,7 @@ class KawaiiCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: LightTactile(child: Container(
+      child: Container(
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             begin: Alignment.topCenter, end: Alignment.bottomCenter,
@@ -157,7 +157,7 @@ class KawaiiCard extends StatelessWidget {
           // Content with padding on top
           Padding(padding: padding, child: child),
         ]),
-      )),
+      ),
     );
   }
 }
@@ -192,7 +192,7 @@ class KawaiiBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surface = KawaiiSurface(tactile: false,
+    final surface = KawaiiSurface(tactile: !interactive,  // passive bounce when not wrapped in KawaiiPressable
       gloss: GlossLevel.medium,
       height: size, width: size,
       shineHeight: 0.36,
@@ -225,7 +225,7 @@ class KawaiiTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surface = KawaiiSurface(tactile: false,
+    final surface = KawaiiSurface(tactile: !interactive,
       gloss: GlossLevel.subtle,
       shineOpacity: 0.25,
       shineHeight: 0.38,
@@ -264,7 +264,7 @@ class KawaiiAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget avatar = Column(mainAxisSize: MainAxisSize.min, children: [
       SizedBox(width: size + 4, height: size + 4, child: Stack(children: [
-        KawaiiSurface(tactile: false,
+        KawaiiSurface(tactile: !interactive,
           gloss: GlossLevel.medium,
           height: size, width: size,
           shineHeight: 0.35,
