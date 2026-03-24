@@ -122,19 +122,27 @@ class KawaiiSoundEngine {
     return _toWav(_mix(layers));
   }
 
+  // Throttle: skip haptic if last one was <40ms ago (prevents spam buzz)
+  DateTime _lastHaptic = DateTime(0);
+
   void _playHaptic(KawaiiSound sound) {
-    // Try native predefined effects first (API 29+, manufacturer-tuned).
-    // Falls back to raw vibration, then Flutter HapticFeedback.
+    final now = DateTime.now();
+    if (now.difference(_lastHaptic).inMilliseconds < 40) return;
+    _lastHaptic = now;
+
+    // Map sound → appropriate haptic intensity
     final effect = switch (sound) {
-      KawaiiSound.tick => 'tick',
-      KawaiiSound.toggle => 'click',
-      KawaiiSound.boop || KawaiiSound.pop || KawaiiSound.send => 'heavy_click',
-      KawaiiSound.chime || KawaiiSound.notif => 'heavy_click',
-      KawaiiSound.reward => 'heavy_click',
+      KawaiiSound.tick => 'tick',           // lightest — filter taps, selections
+      KawaiiSound.toggle => 'click',        // clean click — switches
+      KawaiiSound.boop => 'click',          // standard button press
+      KawaiiSound.pop => 'heavy_click',     // hero button — more weight
+      KawaiiSound.send => 'click',          // message sent
+      KawaiiSound.chime => 'click',         // arrival
+      KawaiiSound.notif => 'heavy_click',   // notification — attention
+      KawaiiSound.reward => 'heavy_click',  // achievement — celebration
     };
     _hapticCh.invokeMethod('predefined', {'effect': effect}).catchError((_) {
-      // Fallback if native channel not available
-      HapticFeedback.heavyImpact();
+      HapticFeedback.mediumImpact();
     });
   }
 

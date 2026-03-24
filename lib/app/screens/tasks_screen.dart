@@ -828,15 +828,11 @@ class _TaskListView extends StatelessWidget {
       }
     }
 
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      child: ListView.builder(
-        key: ValueKey('${pending.length}_${completed.length}'),
-        padding: const EdgeInsets.symmetric(
-            horizontal: KawaiiSpacing.xl, vertical: KawaiiSpacing.md),
-        itemCount: items.length,
-        itemBuilder: (context, index) => items[index],
-      ),
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(
+          horizontal: KawaiiSpacing.xl, vertical: KawaiiSpacing.md),
+      itemCount: items.length,
+      itemBuilder: (context, index) => items[index],
     );
   }
 }
@@ -862,15 +858,12 @@ class _TaskCardEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: KawaiiSpacing.md),
-      child: KawaiiEntrance(
-        delay: Duration(milliseconds: 40 * index),
-        child: _TaskCard(
-          task: task,
-          showSparkle: recentlyCompleted.contains(task.id),
-          onToggle: () => onToggle(task),
-          onDelete: () => onDelete(task),
-          timeAgo: timeAgo(task.createdAt),
-        ),
+      child: _TaskCard(
+        task: task,
+        showSparkle: recentlyCompleted.contains(task.id),
+        onToggle: () => onToggle(task),
+        onDelete: () => onDelete(task),
+        timeAgo: timeAgo(task.createdAt),
       ),
     );
   }
