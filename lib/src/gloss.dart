@@ -117,14 +117,15 @@ class KawaiiSurface extends StatelessWidget {
         ? ClipOval(child: _buildStack())
         : ClipRRect(borderRadius: _clipRadius, child: _buildStack()),
     );
-    if (!tactile && onTap == null) return surface;
-    return KawaiiPressable(
-      // Subtle bounce for passive tactile feel; stronger for explicit onTap
-      pressScale: onTap != null ? 0.92 : 0.97,
-      pressTranslateY: onTap != null ? 2.0 : 1.0,
-      onTap: onTap,
-      child: surface,
-    );
+    // Explicit onTap → full KawaiiPressable with controller
+    if (onTap != null) {
+      return KawaiiPressable(
+        pressScale: 0.92, pressTranslateY: 2.0,
+        onTap: onTap, child: surface);
+    }
+    // Passive tactile → lightweight implicit animation (no controller)
+    if (tactile) return _LightTactile(child: surface);
+    return surface;
   }
 
   Widget _buildStack() {
@@ -176,6 +177,37 @@ class KawaiiSurface extends StatelessWidget {
             Padding(padding: padding, child: child),
           ],
         );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  LIGHT TACTILE — zero-overhead passive press feel
+//  No AnimationController, no State — just implicit AnimatedScale.
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+class _LightTactile extends StatefulWidget {
+  final Widget child;
+  const _LightTactile({required this.child});
+  @override
+  State<_LightTactile> createState() => _LightTactileState();
+}
+
+class _LightTactileState extends State<_LightTactile> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
+      child: AnimatedScale(
+        scale: _pressed ? 0.97 : 1.0,
+        duration: Duration(milliseconds: _pressed ? 0 : 150),
+        curve: _pressed ? Curves.linear : KawaiiTokens.pressCurve,
+        child: widget.child,
+      ),
+    );
   }
 }
 
