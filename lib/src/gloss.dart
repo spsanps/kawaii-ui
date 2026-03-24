@@ -75,7 +75,7 @@ class KawaiiSurface extends StatelessWidget {
   final double shineHeight;
 
   /// When true (default), the surface responds to touch with a subtle
-  /// bounce even without an explicit onTap. Uses lightweight _LightTactile
+  /// bounce even without an explicit onTap. Uses lightweight LightTactile
   /// (no AnimationController) so perf impact is minimal.
   final bool tactile;
 
@@ -137,7 +137,7 @@ class KawaiiSurface extends StatelessWidget {
         onTap: onTap, child: surface);
     }
     // Passive tactile → lightweight implicit animation (no controller)
-    if (tactile) return _LightTactile(child: surface);
+    if (tactile) return LightTactile(child: surface);
     return surface;
   }
 
@@ -218,19 +218,20 @@ class KawaiiSurface extends StatelessWidget {
 //  No AnimationController, no State — just implicit AnimatedScale.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-class _LightTactile extends StatefulWidget {
+class LightTactile extends StatefulWidget {
   final Widget child;
-  const _LightTactile({required this.child});
+  const LightTactile({required this.child});
   @override
-  State<_LightTactile> createState() => _LightTactileState();
+  State<LightTactile> createState() => LightTactileState();
 }
 
-class _LightTactileState extends State<_LightTactile> {
+class LightTactileState extends State<LightTactile> {
   bool _pressed = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),

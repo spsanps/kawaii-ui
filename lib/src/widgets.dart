@@ -132,7 +132,7 @@ class KawaiiCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: Container(
+      child: LightTactile(child: Container(
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             begin: Alignment.topCenter, end: Alignment.bottomCenter,
@@ -157,7 +157,7 @@ class KawaiiCard extends StatelessWidget {
           // Content with padding on top
           Padding(padding: padding, child: child),
         ]),
-      ),
+      )),
     );
   }
 }
