@@ -34,7 +34,7 @@ class KawaiiListTile extends StatelessWidget {
     final vPad = dense ? 8.0 : 13.0;
     final hPad = dense ? 12.0 : 15.0;
 
-    final tile = KawaiiSurface(
+    final tile = KawaiiSurface(tactile: false,
       gloss: GlossLevel.subtle,
       shineOpacity: 0.35,
       shineHeight: 0.40,

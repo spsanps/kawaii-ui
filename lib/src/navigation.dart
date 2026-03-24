@@ -78,7 +78,7 @@ class KawaiiBottomNavBar extends StatelessWidget {
                 top: 6,
                 width: itemWidth * 0.76,
                 height: 48,
-                child: KawaiiSurface(
+                child: KawaiiSurface(tactile: false,
                   gloss: GlossLevel.subtle,
                   decoration: BoxDecoration(
                     color: primary.withValues(alpha: KawaiiOpacity.hint),
@@ -222,7 +222,7 @@ class KawaiiTabBar extends StatelessWidget {
                 top: 0,
                 bottom: 0,
                 width: tabWidth,
-                child: KawaiiSurface(
+                child: KawaiiSurface(tactile: false,
                   gloss: GlossLevel.medium,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(

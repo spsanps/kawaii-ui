@@ -135,7 +135,7 @@ Future<T?> showKawaiiBottomSheet<T>({
         if (showHandle)
           Padding(
             padding: const EdgeInsets.only(top: KawaiiSpacing.lg, bottom: KawaiiSpacing.md),
-            child: KawaiiSurface(
+            child: KawaiiSurface(tactile: false,
               gloss: GlossLevel.medium,
               width: 40, height: 5,
               decoration: BoxDecoration(
@@ -248,7 +248,7 @@ class _KawaiiSnackbarWidgetState extends State<_KawaiiSnackbarWidget>
         position: _slide,
         child: FadeTransition(
           opacity: _opacity,
-          child: KawaiiSurface(
+          child: KawaiiSurface(tactile: false,
             gloss: GlossLevel.subtle,
             shineOpacity: 0.35,
             shineHeight: 0.40,

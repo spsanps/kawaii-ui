@@ -84,7 +84,7 @@ class KawaiiButton extends StatelessWidget {
         if (playSound) KawaiiSoundEngine().play(hero ? KawaiiSound.pop : KawaiiSound.boop);
         onTap?.call();
       },
-      child: KawaiiSurface(
+      child: KawaiiSurface(tactile: false,
         gloss: GlossLevel.full,
         height: _h,
         padding: _pad,
@@ -192,7 +192,7 @@ class KawaiiBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surface = KawaiiSurface(
+    final surface = KawaiiSurface(tactile: false,
       gloss: GlossLevel.medium,
       height: size, width: size,
       shineHeight: 0.36,
@@ -225,7 +225,7 @@ class KawaiiTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surface = KawaiiSurface(
+    final surface = KawaiiSurface(tactile: false,
       gloss: GlossLevel.subtle,
       shineOpacity: 0.25,
       shineHeight: 0.38,
@@ -264,7 +264,7 @@ class KawaiiAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget avatar = Column(mainAxisSize: MainAxisSize.min, children: [
       SizedBox(width: size + 4, height: size + 4, child: Stack(children: [
-        KawaiiSurface(
+        KawaiiSurface(tactile: false,
           gloss: GlossLevel.medium,
           height: size, width: size,
           shineHeight: 0.35,
@@ -331,7 +331,7 @@ class _KawaiiStatState extends State<KawaiiStat> with SingleTickerProviderStateM
       pressScale: 0.92,
       onTap: () { if (widget.playSound) KawaiiSoundEngine().play(KawaiiSound.tick); },
       child: Column(children: [
-        KawaiiSurface(
+        KawaiiSurface(tactile: false,
           gloss: GlossLevel.medium,
           shineOpacity: 0.25,
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
@@ -402,7 +402,7 @@ class _KawaiiProgressState extends State<KawaiiProgress> with SingleTickerProvid
             builder: (context, _) => Align(
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(widthFactor: _fill.value.clamp(0.01, 1.0),
-                child: KawaiiSurface(
+                child: KawaiiSurface(tactile: false,
                   gloss: GlossLevel.medium,
                   shineOpacity: 0.50,
                   shineHeight: 0.45,
@@ -530,7 +530,7 @@ class ChatMessage extends StatelessWidget {
               child: Text(name!, style: kBody(size: 10, weight: FontWeight.w800, color: color)
                   .copyWith(letterSpacing: 0.3))),
             !isMe
-              ? KawaiiSurface(
+              ? KawaiiSurface(tactile: false,
                   gloss: GlossLevel.subtle,
                   shineOpacity: 0.3,
                   shineHeight: 0.36,
@@ -711,7 +711,7 @@ class KawaiiNotification extends StatelessWidget {
       child: KawaiiPressable(
         onTap: () { if (playSound) KawaiiSoundEngine().play(KawaiiSound.notif); },
         pressScale: 0.98,
-        child: KawaiiSurface(
+        child: KawaiiSurface(tactile: false,
           gloss: GlossLevel.subtle,
           shineOpacity: 0.35,
           shineHeight: 0.40,
@@ -763,7 +763,7 @@ class SoundCard extends StatelessWidget {
     return KawaiiPressable(
       onTap: () { if (playSound) KawaiiSoundEngine().play(sound); },
       pressScale: 0.98,
-      child: KawaiiSurface(
+      child: KawaiiSurface(tactile: false,
         gloss: GlossLevel.subtle,
         shineOpacity: 0.25,
         shineHeight: 0.40,

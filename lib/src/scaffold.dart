@@ -88,7 +88,7 @@ class KawaiiAppBar extends StatelessWidget implements PreferredSizeWidget {
         // [OPT #8] Reduced blur sigma from 20 to 10 — visually similar
         // frosted glass effect but significantly cheaper GPU-side.
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: KawaiiSurface(
+        child: KawaiiSurface(tactile: false,
           gloss: GlossLevel.subtle,
           decoration: BoxDecoration(
             gradient: LinearGradient(

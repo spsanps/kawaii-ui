@@ -198,9 +198,13 @@ class _TasksScreenState extends State<TasksScreen>
                 runSpacing: KawaiiSpacing.wrapRunSpacing,
                 children: TaskCategory.values.map((cat) {
                   final selected = cat == selectedCat;
-                  return GestureDetector(
-                    onTap: () =>
-                        setSheetState(() => selectedCat = cat),
+                  return KawaiiPressable(
+                    pressScale: 0.92,
+                    pressTranslateY: 2,
+                    onTap: () {
+                        setSheetState(() => selectedCat = cat);
+                        KawaiiSoundEngine().play(KawaiiSound.tick);
+                    },
                     child: AnimatedScale(
                       scale: selected ? 1.08 : 1.0,
                       duration: const Duration(milliseconds: 250),
@@ -281,9 +285,14 @@ class _TasksScreenState extends State<TasksScreen>
               Row(
                 children: _TaskPriority.values.map((p) {
                   return Expanded(
-                    child: GestureDetector(
-                      onTap: () => setSheetState(
-                          () => selectedPriority = p),
+                    child: KawaiiPressable(
+                      pressScale: 0.92,
+                      pressTranslateY: 2,
+                      onTap: () {
+                          setSheetState(
+                              () => selectedPriority = p);
+                          KawaiiSoundEngine().play(KawaiiSound.tick);
+                      },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -384,8 +393,13 @@ class _TasksScreenState extends State<TasksScreen>
                   final color = i == 0
                       ? KawaiiColors.pinkBottom
                       : TaskCategory.values[i - 1].color;
-                  return GestureDetector(
-                    onTap: () => setState(() => _selectedFilter = i),
+                  return KawaiiPressable(
+                    pressScale: 0.92,
+                    pressTranslateY: 2,
+                    onTap: () {
+                      setState(() => _selectedFilter = i);
+                      KawaiiSoundEngine().play(KawaiiSound.tick);
+                    },
                     child: AnimatedScale(
                       scale: selected ? 1.06 : 1.0,
                       duration: const Duration(milliseconds: 250),

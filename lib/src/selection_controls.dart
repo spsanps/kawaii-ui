@@ -98,7 +98,7 @@ class _KawaiiCheckboxState extends State<KawaiiCheckbox>
           ),
         ),
         child: widget.value
-            ? KawaiiSurface(
+            ? KawaiiSurface(tactile: false,
                 decoration: const BoxDecoration(color: Colors.transparent),
                 gloss: GlossLevel.full,
                 child: AnimatedBuilder(
@@ -214,7 +214,7 @@ class _KawaiiRadioState<T> extends State<KawaiiRadio<T>>
             animation: _scale,
             builder: (_, __) => Transform.scale(
               scale: _scale.value,
-              child: KawaiiSurface(
+              child: KawaiiSurface(tactile: false,
                 width: s * 0.5,
                 height: s * 0.5,
                 decoration: BoxDecoration(
@@ -325,7 +325,7 @@ class _KawaiiSliderState extends State<KawaiiSlider> {
               Positioned(
                 left: _thumbD / 2,
                 width: trackW * v,
-                child: KawaiiSurface(
+                child: KawaiiSurface(tactile: false,
                   height: _trackH,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(_trackH / 2),

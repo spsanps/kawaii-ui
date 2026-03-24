@@ -66,6 +66,15 @@ class KawaiiSurface extends StatelessWidget {
   final double? shineOpacity;
   final double shineHeight;
 
+  /// When true (default), the surface responds to touch with a subtle
+  /// bounce even without an explicit onTap. This makes every glossy
+  /// element feel physically pressable.
+  final bool tactile;
+
+  /// Optional tap callback. When provided, the surface plays a haptic
+  /// click on tap in addition to the tactile bounce.
+  final VoidCallback? onTap;
+
   const KawaiiSurface({
     super.key,
     required this.child,
@@ -76,6 +85,8 @@ class KawaiiSurface extends StatelessWidget {
     this.width,
     this.shineOpacity,
     this.shineHeight = 0.36,
+    this.tactile = true,
+    this.onTap,
   });
 
   double get _shine => shineOpacity ?? KawaiiTokens.shineOpacity(gloss);
@@ -98,13 +109,21 @@ class KawaiiSurface extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    Widget surface = Container(
       height: height,
       width: width,
       decoration: decoration,
       child: _isCircle
         ? ClipOval(child: _buildStack())
         : ClipRRect(borderRadius: _clipRadius, child: _buildStack()),
+    );
+    if (!tactile && onTap == null) return surface;
+    return KawaiiPressable(
+      // Subtle bounce for passive tactile feel; stronger for explicit onTap
+      pressScale: onTap != null ? 0.92 : 0.97,
+      pressTranslateY: onTap != null ? 2.0 : 1.0,
+      onTap: onTap,
+      child: surface,
     );
   }
 

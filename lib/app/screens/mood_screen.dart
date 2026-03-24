@@ -391,8 +391,13 @@ class _MoodScreenState extends State<MoodScreen>
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: Mood.values.map((mood) {
                 final selected = mood == _selectedMood;
-                return GestureDetector(
-                  onTap: () => setState(() => _selectedMood = mood),
+                return KawaiiPressable(
+                  pressScale: 0.93,
+                  pressTranslateY: 2,
+                  onTap: () {
+                    setState(() => _selectedMood = mood);
+                    KawaiiSoundEngine().play(KawaiiSound.tick);
+                  },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -495,7 +500,9 @@ class _MoodScreenState extends State<MoodScreen>
                 return sorted.map((f) {
                   final selected = _selectedFeelings.contains(f);
                   final atMax = _selectedFeelings.length >= 3 && !selected;
-                  return GestureDetector(
+                  return KawaiiPressable(
+                    pressScale: 0.92,
+                    pressTranslateY: 2,
                     onTap: atMax ? null : () {
                       setState(() {
                         if (selected) { _selectedFeelings.remove(f); }

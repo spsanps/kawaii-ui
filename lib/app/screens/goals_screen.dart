@@ -153,8 +153,13 @@ class GoalsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   for (final c in colors) ...[
-                    GestureDetector(
-                      onTap: () => setState(() => selected = c),
+                    KawaiiPressable(
+                      pressScale: 0.92,
+                      pressTranslateY: 2,
+                      onTap: () {
+                        setState(() => selected = c);
+                        KawaiiSoundEngine().play(KawaiiSound.tick);
+                      },
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 250),
                         curve: KawaiiCurves.spring,
