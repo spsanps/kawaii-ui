@@ -84,7 +84,7 @@ class KawaiiButton extends StatelessWidget {
         if (playSound) KawaiiSoundEngine().play(hero ? KawaiiSound.pop : KawaiiSound.boop);
         onTap?.call();
       },
-      child: KawaiiSurface(tactile: false,
+      child: KawaiiSurface(
         gloss: GlossLevel.full,
         height: _h,
         padding: _pad,
@@ -331,7 +331,7 @@ class _KawaiiStatState extends State<KawaiiStat> with SingleTickerProviderStateM
       pressScale: 0.92,
       onTap: () { if (widget.playSound) KawaiiSoundEngine().play(KawaiiSound.tick); },
       child: Column(children: [
-        KawaiiSurface(tactile: false,
+        KawaiiSurface(
           gloss: GlossLevel.medium,
           shineOpacity: 0.25,
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
@@ -713,7 +713,7 @@ class KawaiiNotification extends StatelessWidget {
       child: KawaiiPressable(
         onTap: () { if (playSound) KawaiiSoundEngine().play(KawaiiSound.notif); },
         pressScale: 0.98,
-        child: KawaiiSurface(tactile: false,
+        child: KawaiiSurface(
           gloss: GlossLevel.subtle,
           shineOpacity: 0.35,
           shineHeight: 0.40,
@@ -765,7 +765,7 @@ class SoundCard extends StatelessWidget {
     return KawaiiPressable(
       onTap: () { if (playSound) KawaiiSoundEngine().play(sound); },
       pressScale: 0.98,
-      child: KawaiiSurface(tactile: false,
+      child: KawaiiSurface(
         gloss: GlossLevel.subtle,
         shineOpacity: 0.25,
         shineHeight: 0.40,

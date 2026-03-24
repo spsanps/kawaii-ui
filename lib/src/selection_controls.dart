@@ -128,6 +128,7 @@ class KawaiiRadio<T> extends StatefulWidget {
   final ValueChanged<T>? onChanged;
   final Color color;
   final double size;
+  final bool playSound;
 
   const KawaiiRadio({
     super.key,
@@ -136,6 +137,7 @@ class KawaiiRadio<T> extends StatefulWidget {
     this.onChanged,
     this.color = const Color(0xFFF08CAE),
     this.size = 22,
+    this.playSound = true,
   });
 
   @override
@@ -178,7 +180,7 @@ class _KawaiiRadioState<T> extends State<KawaiiRadio<T>>
 
   void _select() {
     if (!_selected) {
-      KawaiiSoundEngine().play(KawaiiSound.tick);
+      if (widget.playSound) KawaiiSoundEngine().play(KawaiiSound.tick);
       widget.onChanged?.call(widget.value);
     }
   }

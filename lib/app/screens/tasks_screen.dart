@@ -104,16 +104,21 @@ class _TasksScreenState extends State<TasksScreen> {
     var selectedCat = TaskCategory.personal;
     var selectedPriority = _TaskPriority.medium;
     int charCount = 0;
+    StateSetter? _sheetState;
 
     // Listen outside the builder to avoid adding listeners on every rebuild
     titleCtrl.addListener(() {
       final len = titleCtrl.text.length;
-      if (len != charCount) charCount = len;
+      if (len != charCount) {
+        charCount = len;
+        _sheetState?.call(() {});
+      }
     });
     showKawaiiBottomSheet(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheetState) {
+          _sheetState = setSheetState;
           return Padding(
             padding: const EdgeInsets.fromLTRB(
               KawaiiSpacing.page, KawaiiSpacing.lg,
@@ -308,6 +313,7 @@ class _TasksScreenState extends State<TasksScreen> {
                             value: p,
                             groupValue: selectedPriority,
                             color: p.color,
+                            playSound: false,
                             onChanged: (v) => setSheetState(
                                 () => selectedPriority = v),
                           ),
@@ -350,7 +356,7 @@ class _TasksScreenState extends State<TasksScreen> {
           );
         },
       ),
-    );
+    ).whenComplete(() => titleCtrl.dispose());
   }
 
   @override

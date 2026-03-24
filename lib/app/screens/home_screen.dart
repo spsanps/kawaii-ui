@@ -1073,7 +1073,7 @@ class _GoalsCarousel extends StatelessWidget {
           )
         else
           SizedBox(
-            height: 175,
+            height: 200,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),

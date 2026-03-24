@@ -215,7 +215,10 @@ class GoalsScreen extends StatelessWidget {
           }
         }),
       ],
-    );
+    ).whenComplete(() {
+      titleCtrl.dispose();
+      targetCtrl.dispose();
+    });
   }
 
   Widget _kawaiiTextField(
