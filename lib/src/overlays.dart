@@ -155,7 +155,7 @@ Future<T?> showKawaiiBottomSheet<T>({
               child: const SizedBox.shrink(),
             ),
           ),
-        _DeferredSheetContent(builder: builder),
+        builder(ctx),
         // Keyboard-aware padding so content stays visible
         SizedBox(height: MediaQuery.of(ctx).viewInsets.bottom),
       ]),
