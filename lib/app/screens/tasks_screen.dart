@@ -388,11 +388,12 @@ class _TasksScreenState extends State<TasksScreen> {
 
             // ── Category filter pills ──
             SizedBox(
-              height: 48,
+              height: 52,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
+                clipBehavior: Clip.none,
                 padding: const EdgeInsets.symmetric(
-                    horizontal: KawaiiSpacing.xl),
+                    horizontal: KawaiiSpacing.xl, vertical: 4),
                 itemCount: _filters.length,
                 separatorBuilder: (_, __) =>
                     const SizedBox(width: KawaiiSpacing.md),

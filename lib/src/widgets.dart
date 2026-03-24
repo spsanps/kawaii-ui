@@ -403,13 +403,12 @@ class _KawaiiProgressState extends State<KawaiiProgress> with SingleTickerProvid
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(widthFactor: _fill.value.clamp(0.01, 1.0),
                 child: KawaiiSurface(tactile: false,
-                  gloss: GlossLevel.subtle,
-                  shineOpacity: 0.30,
-                  shineHeight: 0.38,
+                  gloss: GlossLevel.full,
+                  shineOpacity: 0.40,
+                  shineHeight: 0.45,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(KawaiiBorderRadius.xs),
-                    gradient: LinearGradient(colors: [
-                      widget.color.withValues(alpha: KawaiiOpacity.heavy), widget.color])),
+                    color: widget.color),
                   child: const SizedBox.expand(),
                 )),
             ),

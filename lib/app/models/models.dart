@@ -14,13 +14,13 @@ extension TaskCategoryX on TaskCategory {
     TaskCategory.personal => const Color(0xFFF06292),
     TaskCategory.work => const Color(0xFF7C4DFF),
     TaskCategory.health => const Color(0xFF66BB6A),
-    TaskCategory.creative => const Color(0xFFFFB74D),
+    TaskCategory.creative => const Color(0xFFFF8A65),
   };
   Color get accent => switch (this) {
     TaskCategory.personal => const Color(0xFFFFABC8),
     TaskCategory.work => const Color(0xFFB388FF),
     TaskCategory.health => const Color(0xFFA5D6A7),
-    TaskCategory.creative => const Color(0xFFFFE082),
+    TaskCategory.creative => const Color(0xFFFFCCBC),
   };
 }
 
