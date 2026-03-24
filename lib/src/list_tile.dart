@@ -128,3 +128,59 @@ class KawaiiDivider extends StatelessWidget {
     );
   }
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  KAWAII LIST VIEW — always-lazy list with stagger entrance
+//  Prevents the #1 perf mistake: ListView(children: [...]) which
+//  builds all items eagerly. This wrapper enforces lazy building.
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+class KawaiiListView extends StatelessWidget {
+  /// Number of items in the list.
+  final int itemCount;
+
+  /// Builder for each item. Called lazily — only visible items are built.
+  final IndexedWidgetBuilder itemBuilder;
+
+  /// Optional header widgets shown before the list items.
+  final List<Widget> header;
+
+  /// Padding around the list.
+  final EdgeInsets padding;
+
+  /// Whether to add stagger entrance animations to each item.
+  final bool staggerEntrance;
+
+  /// Stagger delay between items (only if staggerEntrance is true).
+  final Duration staggerDelay;
+
+  const KawaiiListView({
+    super.key,
+    required this.itemCount,
+    required this.itemBuilder,
+    this.header = const [],
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: KawaiiSpacing.xl, vertical: KawaiiSpacing.page),
+    this.staggerEntrance = false,
+    this.staggerDelay = const Duration(milliseconds: 80),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final totalCount = header.length + itemCount;
+    return ListView.builder(
+      padding: padding,
+      itemCount: totalCount,
+      itemBuilder: (ctx, index) {
+        if (index < header.length) return header[index];
+        final itemIndex = index - header.length;
+        final child = itemBuilder(ctx, itemIndex);
+        if (!staggerEntrance) return child;
+        return KawaiiEntrance(
+          delay: staggerDelay * itemIndex,
+          child: child,
+        );
+      },
+    );
+  }
+}
