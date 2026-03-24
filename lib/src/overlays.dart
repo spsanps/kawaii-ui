@@ -268,7 +268,7 @@ class _KawaiiSnackbarWidgetState extends State<_KawaiiSnackbarWidget>
               borderRadius: BorderRadius.circular(KawaiiBorderRadius.lg),
               gradient: const LinearGradient(
                 begin: Alignment.topCenter, end: Alignment.bottomCenter,
-                colors: [Color(0xA6FFFFFF), Color(0x73FFF8FC)],
+                colors: [Color(0xF2FFFFFF), Color(0xE6FFF8FC)],
               ),
               border: Border.all(color: color.withValues(alpha: KawaiiOpacity.hint), width: KawaiiBorderWidth.light),
               boxShadow: [BoxShadow(color: color.withValues(alpha: KawaiiOpacity.ghost),
