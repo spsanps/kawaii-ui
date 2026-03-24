@@ -34,6 +34,15 @@ class TasksScreen extends StatefulWidget {
 class _TasksScreenState extends State<TasksScreen> {
   int _selectedFilter = 0;
   final Set<String> _recentlyCompleted = {};
+  bool _showingAddForm = false;
+  final _addTitleCtrl = TextEditingController();
+  TaskCategory _addCategory = TaskCategory.personal;
+
+  @override
+  void dispose() {
+    _addTitleCtrl.dispose();
+    super.dispose();
+  }
 
   static const _filters = ['All', 'Personal', 'Work', 'Health', 'Creative'];
 
@@ -495,18 +504,68 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
             ),
 
-            // ── Floating add button ──
-            Padding(
-              padding: const EdgeInsets.only(
-                bottom: KawaiiSpacing.xxl,
-                top: KawaiiSpacing.md,
-              ),
-              child: KawaiiButton.pink(
-                'Add New Task',
-                hero: true,
-                i: kawaiiIcon(Star4Painter(), size: 16),
-                onTap: _showAddTask,
-              ),
+            // ── Inline add form (instant, no sheet animation) ──
+            AnimatedSize(
+              duration: const Duration(milliseconds: 200),
+              curve: KawaiiCurves.soft,
+              child: _showingAddForm
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: KawaiiSpacing.xl, vertical: KawaiiSpacing.md),
+                    child: KawaiiCard(showSparkles: false, child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        KawaiiTextField(
+                          placeholder: 'What needs doing?',
+                          controller: _addTitleCtrl,
+                          color: _addCategory.color,
+                        ),
+                        const SizedBox(height: KawaiiSpacing.lg),
+                        Wrap(spacing: 6, runSpacing: 6, children: TaskCategory.values.map((cat) {
+                          final sel = cat == _addCategory;
+                          return KawaiiPressable(
+                            pressScale: 0.92, pressTranslateY: 2,
+                            onTap: () => setState(() => _addCategory = cat),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(KawaiiBorderRadius.md),
+                                gradient: sel ? LinearGradient(colors: [cat.accent, cat.color]) : null,
+                                color: sel ? null : cat.color.withValues(alpha: KawaiiOpacity.whisper),
+                                border: Border.all(color: cat.color.withValues(alpha: sel ? 0.5 : 0.15)),
+                              ),
+                              child: Text(cat.label, style: kBody(size: 11, weight: FontWeight.w800,
+                                color: sel ? Colors.white : cat.color)),
+                            ),
+                          );
+                        }).toList()),
+                        const SizedBox(height: KawaiiSpacing.lg),
+                        Row(children: [
+                          Expanded(child: KawaiiButton.pink('Add', onTap: () {
+                            final title = _addTitleCtrl.text.trim();
+                            if (title.isEmpty) return;
+                            widget.store.addTask(title, _addCategory);
+                            _addTitleCtrl.clear();
+                            setState(() => _showingAddForm = false);
+                            showKawaiiSnackbar(context: context, message: 'Task added!',
+                              type: KawaiiSnackbarType.success);
+                          })),
+                          const SizedBox(width: KawaiiSpacing.md),
+                          KawaiiButton.green('Cancel', small: true, onTap: () {
+                            _addTitleCtrl.clear();
+                            setState(() => _showingAddForm = false);
+                          }),
+                        ]),
+                      ],
+                    )),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: KawaiiSpacing.xxl, top: KawaiiSpacing.md),
+                    child: KawaiiButton.pink('Add New Task', hero: true,
+                      i: kawaiiIcon(const Star4Painter(), size: 16),
+                      onTap: () => setState(() => _showingAddForm = true)),
+                  ),
             ),
           ]);
         },
