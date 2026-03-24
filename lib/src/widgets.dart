@@ -203,12 +203,8 @@ class KawaiiBadge extends StatelessWidget {
       ),
       child: child,
     );
-    if (!interactive) return surface;
-    return KawaiiPressable(
-      pressScale: 0.92,
-      onTap: () {},
-      child: surface,
-    );
+    // tactile:true on KawaiiSurface handles bounce + tick for all badges
+    return surface;
   }
 }
 
@@ -235,16 +231,11 @@ class KawaiiTag extends StatelessWidget {
       ),
       child: Text(text, style: kBody(size: 11, weight: FontWeight.w800, color: color)),
     );
-    if (!interactive) return surface;
-    return KawaiiPressable(
-      pressScale: 0.93,
-      onTap: () {},
-      child: surface,
-    );
+    return surface;
   }
 }
 
-// ━━━ AVATAR — tappable ━━━
+// ━━━ AVATAR ━━━
 class KawaiiAvatar extends StatelessWidget {
   final Widget icon;
   final Color color;
@@ -286,12 +277,7 @@ class KawaiiAvatar extends StatelessWidget {
       if (name != null) ...[const SizedBox(height: 5),
         Text(name!, style: kBody(size: 10, weight: FontWeight.w800, color: KawaiiColors.heading))],
     ]);
-    if (!interactive) return avatar;
-    return KawaiiPressable(
-      pressScale: 0.90,
-      onTap: () {},
-      child: avatar,
-    );
+    return avatar;
   }
 }
 
@@ -327,7 +313,6 @@ class _KawaiiStatState extends State<KawaiiStat> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return KawaiiPressable(
       pressScale: 0.92,
-      onTap: () {},
       child: Column(children: [
         KawaiiSurface(
           gloss: GlossLevel.medium,
@@ -709,7 +694,6 @@ class KawaiiNotification extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: KawaiiPressable(sound: KawaiiSound.notif,
-        onTap: () {},
         pressScale: 0.98,
         child: KawaiiSurface(
           gloss: GlossLevel.subtle,
@@ -761,7 +745,6 @@ class SoundCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return KawaiiPressable(sound: sound,
-      onTap: () {},
       pressScale: 0.98,
       child: KawaiiSurface(
         gloss: GlossLevel.subtle,
