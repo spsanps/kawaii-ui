@@ -184,3 +184,74 @@ class KawaiiListView extends StatelessWidget {
     );
   }
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  KAWAII EXPANDABLE FORM — instant inline form, no modal sheet
+//  Forces the pattern: tap button → form expands in place (instant)
+//  instead of: tap button → sheet slides up (250ms delay).
+//  Use this instead of showKawaiiBottomSheet for simple 1-3 field forms.
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+class KawaiiExpandableForm extends StatefulWidget {
+  /// The button label shown when the form is collapsed.
+  final String buttonLabel;
+
+  /// Button color preset (uses KawaiiButton factories).
+  final Color? buttonColor;
+
+  /// Builder for the expanded form content. Return the form fields.
+  /// Call `collapse()` to close the form after submission.
+  final Widget Function(BuildContext context, VoidCallback collapse) formBuilder;
+
+  /// Whether the button should be hero-sized.
+  final bool heroButton;
+
+  /// Icon on the collapsed button.
+  final Widget? buttonIcon;
+
+  const KawaiiExpandableForm({
+    super.key,
+    required this.buttonLabel,
+    required this.formBuilder,
+    this.buttonColor,
+    this.heroButton = true,
+    this.buttonIcon,
+  });
+
+  @override
+  State<KawaiiExpandableForm> createState() => _KawaiiExpandableFormState();
+}
+
+class _KawaiiExpandableFormState extends State<KawaiiExpandableForm> {
+  bool _expanded = false;
+
+  void _collapse() => setState(() => _expanded = false);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 200),
+      curve: KawaiiCurves.soft,
+      alignment: Alignment.topCenter,
+      child: _expanded
+          ? Padding(
+              padding: const EdgeInsets.symmetric(vertical: KawaiiSpacing.md),
+              child: KawaiiCard(
+                showSparkles: false,
+                child: widget.formBuilder(context, _collapse),
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.only(
+                bottom: KawaiiSpacing.xxl, top: KawaiiSpacing.md),
+              child: KawaiiButton(
+                label: widget.buttonLabel,
+                hero: widget.heroButton,
+                icon: widget.buttonIcon,
+                colors: KawaiiButtonColors.pink,
+                onTap: () => setState(() => _expanded = true),
+              ),
+            ),
+    );
+  }
+}
