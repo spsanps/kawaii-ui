@@ -388,7 +388,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
             // ── Category filter pills ──
             SizedBox(
-              height: 40,
+              height: 48,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(

@@ -13,6 +13,7 @@ class KawaiiSoundEngine {
   bool _muted = false;
   final _rng = Random();
   static const _ch = MethodChannel('kawaii_sound');
+  static const _hapticCh = MethodChannel('kawaii_haptics');
 
   // Pre-cached WAV bytes for each sound (3 variants each for micro-variation)
   final Map<KawaiiSound, List<Uint8List>> _cache = {};
@@ -121,24 +122,27 @@ class KawaiiSoundEngine {
     return _toWav(_mix(layers));
   }
 
+  void _playHaptic(KawaiiSound sound) {
+    // Try native predefined effects first (API 29+, manufacturer-tuned).
+    // Falls back to raw vibration, then Flutter HapticFeedback.
+    final effect = switch (sound) {
+      KawaiiSound.tick => 'tick',
+      KawaiiSound.toggle => 'click',
+      KawaiiSound.boop || KawaiiSound.pop || KawaiiSound.send => 'heavy_click',
+      KawaiiSound.chime || KawaiiSound.notif => 'heavy_click',
+      KawaiiSound.reward => 'heavy_click',
+    };
+    _hapticCh.invokeMethod('predefined', {'effect': effect}).catchError((_) {
+      // Fallback if native channel not available
+      HapticFeedback.heavyImpact();
+    });
+  }
+
   /// Play a sound — picks from pre-cached variants for micro-variation
   void play(KawaiiSound sound) {
-    // Tiered haptics — single hit, not multi-buzz.
-    // Safe to tier now that stacking is fixed (playSound param + no overlay auto-play).
-    switch (sound) {
-      case KawaiiSound.tick:
-      case KawaiiSound.toggle:
-        HapticFeedback.lightImpact();    // light tap — selections, toggles
-      case KawaiiSound.boop:
-      case KawaiiSound.pop:
-      case KawaiiSound.send:
-        HapticFeedback.lightImpact();    // clean thud — button presses
-      case KawaiiSound.chime:
-      case KawaiiSound.notif:
-        HapticFeedback.mediumImpact();   // solid thud — arrivals, notifications
-      case KawaiiSound.reward:
-        HapticFeedback.mediumImpact();   // deep thud — completions, celebrations
-    }
+    // Native haptics via Android Vibrator API for strong, quality feedback.
+    // Falls back to Flutter HapticFeedback if channel not available.
+    _playHaptic(sound);
     if (_muted) return;
     final variants = _cache[sound];
     if (variants == null || variants.isEmpty) return;
