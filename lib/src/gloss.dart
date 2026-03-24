@@ -156,30 +156,22 @@ class KawaiiSurface extends StatelessWidget {
                 ),
               )),
 
-            // Shine — top-lit surface, capped to max 18px absolute height
-            Positioned.fill(child: LayoutBuilder(
-              builder: (context, constraints) {
-                final h = constraints.maxHeight;
-                // On tall panels, cap shine to avoid washed-out look
-                final effectiveShine = h.isFinite && h > 50
-                    ? (18.0 / h).clamp(0.0, shineHeight)
-                    : shineHeight;
-                return DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0.0, effectiveShine, effectiveShine + 0.05],
-                      colors: [
-                        Colors.white.withValues(alpha: _shine),
-                        Colors.white.withValues(alpha: _shine * 0.15),
-                        Colors.transparent,
-                      ],
-                    ),
+            // Shine — top-lit surface
+            if (_shine > 0)
+              Positioned.fill(child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.0, shineHeight * 0.6, shineHeight],
+                    colors: [
+                      Colors.white.withValues(alpha: _shine),
+                      Colors.white.withValues(alpha: _shine * 0.2),
+                      Colors.transparent,
+                    ],
                   ),
-                );
-              },
-            )),
+                ),
+              )),
 
             // Content ON TOP (highest z-order, like CSS z-index: 1)
             Padding(padding: padding, child: child),

@@ -97,14 +97,15 @@ class _TasksScreenState extends State<TasksScreen>
     var selectedPriority = _TaskPriority.medium;
     int charCount = 0;
 
+    // Listen outside the builder to avoid adding listeners on every rebuild
+    titleCtrl.addListener(() {
+      final len = titleCtrl.text.length;
+      if (len != charCount) charCount = len;
+    });
     showKawaiiBottomSheet(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheetState) {
-          titleCtrl.addListener(() {
-            final len = titleCtrl.text.length;
-            if (len != charCount) setSheetState(() => charCount = len);
-          });
           return Padding(
             padding: EdgeInsets.fromLTRB(
               KawaiiSpacing.page, KawaiiSpacing.lg,
@@ -152,7 +153,7 @@ class _TasksScreenState extends State<TasksScreen>
                   children: [
                     TextField(
                       controller: titleCtrl,
-                      autofocus: true,
+                      autofocus: false,
                       maxLength: 80,
                       decoration: InputDecoration(
                         hintText: 'What needs doing?',
