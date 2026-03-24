@@ -7,6 +7,12 @@ import 'theme.dart';
 import 'widgets.dart';
 import 'navigation.dart';
 
+// Cached base style for app bar title to avoid creating new TextStyle per build
+final TextStyle _appBarTitleStyle = GoogleFonts.fredoka(
+  fontWeight: FontWeight.w600,
+  color: KawaiiColors.heading,
+);
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  KAWAII SCAFFOLD — gradient background + optional sparkle field
 //  Accepts either a single `body` or `pages` + `navItems` for
@@ -165,11 +171,7 @@ class KawaiiAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _buildContent() {
     final titleWidget = DefaultTextStyle.merge(
-      style: GoogleFonts.fredoka(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        color: KawaiiColors.heading,
-      ),
+      style: _appBarTitleStyle.copyWith(fontSize: 20),
       child: title,
     );
 

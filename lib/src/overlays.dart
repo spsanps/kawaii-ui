@@ -37,12 +37,10 @@ Future<T?> showKawaiiDialog<T>({
         child: Center(
           child: Material(
             color: Colors.transparent,
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 340),
-                child: _KawaiiDialogBody(title: title, content: content,
-                  actions: actions, scrollable: scrollable, body: body),
-              ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 340),
+              child: _KawaiiDialogBody(title: title, content: content,
+                actions: actions, scrollable: scrollable, body: body),
             ),
           ),
         ),

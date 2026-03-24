@@ -38,23 +38,33 @@ class KawaiiLifeHome extends StatefulWidget {
 class _KawaiiLifeHomeState extends State<KawaiiLifeHome> {
   final AppStore _store = AppStore();
   final _scaffoldKey = GlobalKey<KawaiiScaffoldState>();
+  late final List<Widget> _pages;
 
   void _goToTab(int index) => _scaffoldKey.currentState?.setPage(index);
 
   @override
+  void initState() {
+    super.initState();
+    // Build pages once — each screen has its own ListenableBuilder internally
+    _pages = [
+      HomeScreen(store: _store, onNavigateToTab: _goToTab),
+      TasksScreen(store: _store),
+      MoodScreen(store: _store),
+      GoalsScreen(store: _store),
+    ];
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // ListenableBuilder scoped to rebuild only navItems (for badge count),
+    // pages are cached in _pages and won't be rebuilt.
     return ListenableBuilder(
       listenable: _store,
       builder: (context, _) {
         final incompleteTasks = _store.tasks.where((t) => !t.done).length;
         return KawaiiScaffold(
           key: _scaffoldKey,
-          pages: [
-            HomeScreen(store: _store, onNavigateToTab: _goToTab),
-            TasksScreen(store: _store),
-            MoodScreen(store: _store),
-            GoalsScreen(store: _store),
-          ],
+          pages: _pages,
           navItems: [
             KawaiiNavItem(icon: kawaiiIcon(const HeartPainter(), size: 22), label: 'Home'),
             KawaiiNavItem(

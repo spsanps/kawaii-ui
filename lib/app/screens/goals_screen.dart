@@ -18,73 +18,76 @@ class GoalsScreen extends StatelessWidget {
       listenable: store,
       builder: (context, _) {
         final goals = store.goals;
-        return ListView(
+
+        // Build header items (summary, button, empty state)
+        final headerItems = <Widget>[
+          KawaiiEntrance(
+            child: _SummaryStats(goals: goals),
+          ),
+          const SizedBox(height: KawaiiSpacing.xxl),
+          KawaiiEntrance(
+            delay: const Duration(milliseconds: 60),
+            child: Center(
+              child: KawaiiButton.pink(
+                '+ New Goal',
+                hero: true,
+                i: const Icon(Icons.flag_rounded, size: 18, color: Color(0xFF6D2042)),
+                onTap: () => _showAddDialog(context),
+              ),
+            ),
+          ),
+          const SizedBox(height: KawaiiSpacing.xxl),
+          if (goals.isEmpty)
+            KawaiiEntrance(
+              delay: const Duration(milliseconds: 120),
+              child: const _EmptyState(),
+            ),
+        ];
+
+        final headerCount = headerItems.length;
+        final totalCount = headerCount + goals.length;
+
+        return ListView.builder(
           padding: const EdgeInsets.all(KawaiiSpacing.xl),
-          children: [
-            // ── Summary stats ──
-            KawaiiEntrance(
-              child: _SummaryStats(goals: goals),
-            ),
-            const SizedBox(height: KawaiiSpacing.xxl),
-
-            // ── Add goal button ──
-            KawaiiEntrance(
-              delay: const Duration(milliseconds: 60),
-              child: Center(
-                child: KawaiiButton.pink(
-                  '+ New Goal',
-                  hero: true,
-                  i: const Icon(Icons.flag_rounded, size: 18, color: Color(0xFF6D2042)),
-                  onTap: () => _showAddDialog(context),
-                ),
-              ),
-            ),
-            const SizedBox(height: KawaiiSpacing.xxl),
-
-            // ── Empty state ──
-            if (goals.isEmpty)
-              KawaiiEntrance(
-                delay: const Duration(milliseconds: 120),
-                child: const _EmptyState(),
-              ),
-
-            // ── Goal cards ──
-            for (int i = 0; i < goals.length; i++)
-              KawaiiEntrance(
-                delay: Duration(milliseconds: 120 + 80 * i),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: KawaiiSpacing.lg),
-                  child: Dismissible(
-                    key: ValueKey(goals[i].id),
-                    direction: DismissDirection.endToStart,
-                    background: Container(
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: KawaiiSpacing.xxl),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(KawaiiBorderRadius.card),
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.transparent,
-                            const Color(0xFFF06292).withValues(alpha: 0.08),
-                          ],
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.delete_rounded, color: KawaiiColors.muted, size: 24),
-                          const SizedBox(height: 2),
-                          Text('Delete', style: kBody(size: 10, color: KawaiiColors.muted)),
+          itemCount: totalCount,
+          itemBuilder: (context, index) {
+            if (index < headerCount) return headerItems[index];
+            final i = index - headerCount;
+            return KawaiiEntrance(
+              delay: Duration(milliseconds: 120 + 80 * i),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: KawaiiSpacing.lg),
+                child: Dismissible(
+                  key: ValueKey(goals[i].id),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: KawaiiSpacing.xxl),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(KawaiiBorderRadius.card),
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.transparent,
+                          const Color(0xFFF06292).withValues(alpha: 0.08),
                         ],
                       ),
                     ),
-                    confirmDismiss: (_) => _confirmDelete(context, goals[i].title),
-                    onDismissed: (_) => store.deleteGoal(goals[i].id),
-                    child: _GoalCard(goal: goals[i], store: store),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.delete_rounded, color: KawaiiColors.muted, size: 24),
+                        const SizedBox(height: 2),
+                        Text('Delete', style: kBody(size: 10, color: KawaiiColors.muted)),
+                      ],
+                    ),
                   ),
+                  confirmDismiss: (_) => _confirmDelete(context, goals[i].title),
+                  onDismissed: (_) => store.deleteGoal(goals[i].id),
+                  child: _GoalCard(goal: goals[i], store: store),
                 ),
               ),
-          ],
+            );
+          },
         );
       },
     );

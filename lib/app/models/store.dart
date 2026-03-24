@@ -13,6 +13,31 @@ class AppStore extends ChangeNotifier {
   int get streak => _streak;
   List<String> get achievements => List.unmodifiable(_achievements);
 
+  // ━━━ MOOD STREAK (cached) ━━━
+  int? _moodStreakCache;
+  int get moodStreak => _moodStreakCache ??= _computeMoodStreak();
+
+  int _computeMoodStreak() {
+    if (_moods.isEmpty) return 0;
+    int s = 0;
+    var day = DateTime.now();
+    for (int i = 0; i < 365; i++) {
+      final hasEntry = _moods.any((m) =>
+          m.createdAt.day == day.day &&
+          m.createdAt.month == day.month &&
+          m.createdAt.year == day.year);
+      if (hasEntry) {
+        s++;
+        day = day.subtract(const Duration(days: 1));
+      } else {
+        break;
+      }
+    }
+    return s;
+  }
+
+  void _invalidateMoodStreak() => _moodStreakCache = null;
+
   void _earnXP(int amount) {
     _xp += amount;
     // Check for level-up achievements
@@ -83,6 +108,7 @@ class AppStore extends ChangeNotifier {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       mood: mood, feelings: feelings, intensity: intensity, note: note, createdAt: DateTime.now()));
     _earnXP(15); // mood logging earns XP
+    _invalidateMoodStreak();
     if (_moods.length >= 7 && !_achievements.contains('Week Tracker')) {
       _achievements.add('Week Tracker');
     }

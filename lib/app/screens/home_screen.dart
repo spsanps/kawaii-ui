@@ -335,34 +335,36 @@ class _MoodRingState extends State<_MoodRing>
       child: Row(
         children: [
           // Mood ring
-          AnimatedBuilder(
-            animation: _pulse,
-            builder: (context, child) {
-              final scale = 1.0 + 0.06 * _pulse.value;
-              return Transform.scale(
-                scale: scale,
-                child: child,
-              );
-            },
-            child: SizedBox(
-              width: 64,
-              height: 64,
-              child: CustomPaint(
-                painter: _MoodRingPainter(
-                  color: mood.color,
-                  accent: mood.accent,
-                  sweep: intensity,
-                ),
-                child: Center(
-                  child: KawaiiBadge(
-                    bg: mood.accent.withValues(alpha: 0.4),
-                    border: mood.color.withValues(alpha: 0.5),
-                    size: 38,
-                    interactive: false,
-                    child: Center(
-                      child: Text(
-                        mood.label[0],
-                        style: kHeading(size: 16, color: mood.color),
+          RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: _pulse,
+              builder: (context, child) {
+                final scale = 1.0 + 0.06 * _pulse.value;
+                return Transform.scale(
+                  scale: scale,
+                  child: child,
+                );
+              },
+              child: SizedBox(
+                width: 64,
+                height: 64,
+                child: CustomPaint(
+                  painter: _MoodRingPainter(
+                    color: mood.color,
+                    accent: mood.accent,
+                    sweep: intensity,
+                  ),
+                  child: Center(
+                    child: KawaiiBadge(
+                      bg: mood.accent.withValues(alpha: 0.4),
+                      border: mood.color.withValues(alpha: 0.5),
+                      size: 38,
+                      interactive: false,
+                      child: Center(
+                        child: Text(
+                          mood.label[0],
+                          style: kHeading(size: 16, color: mood.color),
+                        ),
                       ),
                     ),
                   ),
@@ -559,8 +561,8 @@ class _StatsRingsRow extends StatelessWidget {
     final total = store.tasksTotal;
     final taskPct = total > 0 ? done / total : 0.0;
 
-    // Streak: count consecutive days with at least one mood entry
-    final streak = _calculateStreak(store.moods);
+    // Streak: use cached value from store
+    final streak = store.moodStreak;
 
     final goalsTotal = store.goals.length;
     final goalsDone = store.goals.where((g) => g.completed).length;
@@ -594,24 +596,6 @@ class _StatsRingsRow extends StatelessWidget {
     );
   }
 
-  int _calculateStreak(List<MoodEntry> moods) {
-    if (moods.isEmpty) return 0;
-    int streak = 0;
-    var day = DateTime.now();
-    for (int i = 0; i < 365; i++) {
-      final hasEntry = moods.any((m) =>
-          m.createdAt.day == day.day &&
-          m.createdAt.month == day.month &&
-          m.createdAt.year == day.year);
-      if (hasEntry) {
-        streak++;
-        day = day.subtract(const Duration(days: 1));
-      } else {
-        break;
-      }
-    }
-    return streak;
-  }
 }
 
 class _CircularProgressRing extends StatefulWidget {

@@ -104,13 +104,15 @@ class _KawaiiCircularProgressState extends State<KawaiiCircularProgress>
           child: Stack(
             alignment: Alignment.center,
             children: [
-              CustomPaint(
-                size: Size(widget.size, widget.size),
-                painter: _CircularProgressPainter(
-                  progress: currentProgress,
-                  strokeWidth: widget.strokeWidth,
-                  color: widget.color,
-                  trackColor: trackColor,
+              RepaintBoundary(
+                child: CustomPaint(
+                  size: Size(widget.size, widget.size),
+                  painter: _CircularProgressPainter(
+                    progress: currentProgress,
+                    strokeWidth: widget.strokeWidth,
+                    color: widget.color,
+                    trackColor: trackColor,
+                  ),
                 ),
               ),
               if (widget.child != null)

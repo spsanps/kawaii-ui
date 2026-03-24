@@ -731,66 +731,87 @@ class _TaskListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Build a flat list of widgets: [active header, ...active cards, completed header, ...completed cards]
+    final items = <Widget>[];
+
+    if (pending.isNotEmpty) {
+      items.add(_SectionHeader(
+          label: 'Active', count: pending.length, active: true));
+      items.add(const SizedBox(height: KawaiiSpacing.md));
+      for (int i = 0; i < pending.length; i++) {
+        items.add(_TaskCardEntry(
+          task: pending[i],
+          index: i,
+          recentlyCompleted: recentlyCompleted,
+          onToggle: onToggle,
+          onDelete: onDelete,
+          timeAgo: timeAgo,
+        ));
+      }
+    }
+
+    if (completed.isNotEmpty) {
+      items.add(const SizedBox(height: KawaiiSpacing.md));
+      items.add(_SectionHeader(
+          label: 'Completed',
+          count: completed.length,
+          active: false));
+      items.add(const SizedBox(height: KawaiiSpacing.md));
+      for (int i = 0; i < completed.length; i++) {
+        items.add(_TaskCardEntry(
+          task: completed[i],
+          index: pending.length + i,
+          recentlyCompleted: recentlyCompleted,
+          onToggle: onToggle,
+          onDelete: onDelete,
+          timeAgo: timeAgo,
+        ));
+      }
+    }
+
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
-      child: ListView(
+      child: ListView.builder(
         key: ValueKey('${pending.length}_${completed.length}'),
         padding: const EdgeInsets.symmetric(
             horizontal: KawaiiSpacing.xl, vertical: KawaiiSpacing.md),
-        children: [
-          // ── Active section header ──
-          if (pending.isNotEmpty) ...[
-            _SectionHeader(
-                label: 'Active', count: pending.length, active: true),
-            const SizedBox(height: KawaiiSpacing.md),
-            ...List.generate(pending.length, (i) {
-              final task = pending[i];
-              return Padding(
-                padding:
-                    const EdgeInsets.only(bottom: KawaiiSpacing.md),
-                child: KawaiiEntrance(
-                  delay: Duration(milliseconds: 40 * i),
-                  child: _TaskCard(
-                    task: task,
-                    showSparkle: recentlyCompleted.contains(task.id),
-                    onToggle: () => onToggle(task),
-                    onDelete: () => onDelete(task),
-                    timeAgo: timeAgo(task.createdAt),
-                  ),
-                ),
-              );
-            }),
-          ],
+        itemCount: items.length,
+        itemBuilder: (context, index) => items[index],
+      ),
+    );
+  }
+}
 
-          // ── Completed section header ──
-          if (completed.isNotEmpty) ...[
-            const SizedBox(height: KawaiiSpacing.md),
-            _SectionHeader(
-                label: 'Completed',
-                count: completed.length,
-                active: false),
-            const SizedBox(height: KawaiiSpacing.md),
-            ...List.generate(completed.length, (i) {
-              final task = completed[i];
-              return Padding(
-                padding:
-                    const EdgeInsets.only(bottom: KawaiiSpacing.md),
-                child: KawaiiEntrance(
-                  delay: Duration(
-                      milliseconds:
-                          40 * (pending.length + i)),
-                  child: _TaskCard(
-                    task: task,
-                    showSparkle: recentlyCompleted.contains(task.id),
-                    onToggle: () => onToggle(task),
-                    onDelete: () => onDelete(task),
-                    timeAgo: timeAgo(task.createdAt),
-                  ),
-                ),
-              );
-            }),
-          ],
-        ],
+class _TaskCardEntry extends StatelessWidget {
+  final TodoTask task;
+  final int index;
+  final Set<String> recentlyCompleted;
+  final ValueChanged<TodoTask> onToggle;
+  final ValueChanged<TodoTask> onDelete;
+  final String Function(DateTime) timeAgo;
+
+  const _TaskCardEntry({
+    required this.task,
+    required this.index,
+    required this.recentlyCompleted,
+    required this.onToggle,
+    required this.onDelete,
+    required this.timeAgo,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: KawaiiSpacing.md),
+      child: KawaiiEntrance(
+        delay: Duration(milliseconds: 40 * index),
+        child: _TaskCard(
+          task: task,
+          showSparkle: recentlyCompleted.contains(task.id),
+          onToggle: () => onToggle(task),
+          onDelete: () => onDelete(task),
+          timeAgo: timeAgo(task.createdAt),
+        ),
       ),
     );
   }
@@ -957,8 +978,11 @@ class _TaskCard extends StatelessWidget {
                   )
                 ],
               ),
-              child: IntrinsicHeight(
-                child: Row(children: [
+              child: SizedBox(
+                height: 72,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
                   // Left accent stripe
                   Container(
                     width: 4,

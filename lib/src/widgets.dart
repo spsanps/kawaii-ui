@@ -104,8 +104,8 @@ class KawaiiButton extends StatelessWidget {
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           if (icon != null) ...[icon!, const SizedBox(width: KawaiiSpacing.iconGap)],
-          Text(label, style: GoogleFonts.fredoka(
-            fontSize: _fs, fontWeight: FontWeight.w700, color: c.text, letterSpacing: 0.4,
+          Text(label, style: _fredokaBase.copyWith(
+            fontSize: _fs, color: c.text, letterSpacing: 0.4,
             shadows: c.text == Colors.white || c.text == const Color(0xFFFFFFFF)
                 ? [const Shadow(color: Colors.black26, offset: Offset(0, 1), blurRadius: 2)] : null,
           )),

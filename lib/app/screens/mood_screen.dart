@@ -373,12 +373,7 @@ class _MoodScreenState extends State<MoodScreen>
       listenable: widget.store,
       builder: (context, _) {
         final entries = widget.store.moods;
-        return ListView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: KawaiiSpacing.page,
-            vertical: KawaiiSpacing.xl,
-          ),
-          children: [
+        final headerWidgets = <Widget>[
             // ── Prompt ──
             Text(
               'How are you feeling?',
@@ -747,17 +742,30 @@ class _MoodScreenState extends State<MoodScreen>
                     ),
                   ],
                 ),
-              )
-            // ── Entry Cards ──
-            else
-              ...entries.map((entry) => _buildEntryCard(entry)),
+              ),
+          ];
 
-            // Bottom padding for scroll clearance
-            const SizedBox(height: KawaiiSpacing.huge),
-          ],
-        );
-      },
-    );
+          // Use ListView.builder to lazily build the header + entries
+          final headerCount = headerWidgets.length;
+          final entryCount = entries.isEmpty ? 0 : entries.length;
+          final totalCount = headerCount + entryCount + 1; // +1 for bottom padding
+
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(
+              horizontal: KawaiiSpacing.page,
+              vertical: KawaiiSpacing.xl,
+            ),
+            itemCount: totalCount,
+            itemBuilder: (context, index) {
+              if (index < headerCount) return headerWidgets[index];
+              if (index < headerCount + entryCount) {
+                return _buildEntryCard(entries[index - headerCount]);
+              }
+              return const SizedBox(height: KawaiiSpacing.huge);
+            },
+          );
+        },
+      );
   }
 
   // ── 7-Day Mood Streak Row ──
