@@ -237,9 +237,11 @@ class LightTactileState extends State<LightTactile> {
   @override
   Widget build(BuildContext context) {
     return Listener(
-      onPointerDown: (_) {
+      onPointerDown: (e) {
         setState(() => _pressed = true);
-        if (widget.playSound) KawaiiSoundEngine().play(KawaiiSound.tick);
+        if (widget.playSound) {
+          SoundGate.instance.tryPlay(KawaiiSound.tick);
+        }
       },
       onPointerUp: (_) => setState(() => _pressed = false),
       onPointerCancel: (_) => setState(() => _pressed = false),
@@ -250,6 +252,28 @@ class LightTactileState extends State<LightTactile> {
         child: widget.child,
       ),
     );
+  }
+}
+
+/// Sound gate: ensures only ONE sound+haptic plays per tap.
+/// Uses a time window — first play() call within 60ms wins,
+/// subsequent calls in the same window are silently ignored.
+/// This handles ALL nesting cases (Button inside Pressable,
+/// Checkbox inside ListTile, etc.) without any manual flags.
+class SoundGate {
+  SoundGate._();
+  static final SoundGate instance = SoundGate._();
+
+  int _lastPlayMs = 0;
+
+  /// Try to play sound. Returns true if played (first in window).
+  /// Returns false if another sound already played in this tap window.
+  bool tryPlay(KawaiiSound sound) {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    if (now - _lastPlayMs < 60) return false; // within same tap
+    _lastPlayMs = now;
+    KawaiiSoundEngine().play(sound);
+    return true;
   }
 }
 
@@ -275,9 +299,9 @@ class KawaiiPressable extends StatefulWidget {
   final VoidCallback? onTap;
   final double pressScale;
   final double pressTranslateY;
-  /// When true (default), plays KawaiiSound.boop on tap.
-  /// Set false when the parent widget handles its own sound (e.g. KawaiiButton).
-  final bool playSound;
+  /// The sound to play on tap. Uses SoundGate so only ONE sound
+  /// plays per pointer event — no double-fire possible.
+  final KawaiiSound sound;
 
   const KawaiiPressable({
     super.key,
@@ -285,7 +309,7 @@ class KawaiiPressable extends StatefulWidget {
     this.onTap,
     this.pressScale = 0.88,
     this.pressTranslateY = 4.0,
-    this.playSound = true,
+    this.sound = KawaiiSound.boop,
   });
 
   @override
@@ -343,7 +367,8 @@ class _KawaiiPressableState extends State<KawaiiPressable>
       onTapUp: (_) {
         _release();
         if (widget.onTap != null) {
-          if (widget.playSound) KawaiiSoundEngine().play(KawaiiSound.boop);
+          // SoundGate ensures only ONE sound per pointer — deepest wins
+          SoundGate.instance.tryPlay(widget.sound);
           widget.onTap!.call();
         }
       },

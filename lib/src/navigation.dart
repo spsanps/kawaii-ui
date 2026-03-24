@@ -103,7 +103,7 @@ class KawaiiBottomNavBar extends StatelessWidget {
                       pressScale: KawaiiTokens.pressScale,
                       pressTranslateY: KawaiiTokens.pressTranslateY,
                       onTap: () {
-                        KawaiiSoundEngine().play(KawaiiSound.tick);
+                        SoundGate.instance.tryPlay(KawaiiSound.tick);
                         onTap(i);
                       },
                       child: SizedBox.expand(
@@ -257,7 +257,7 @@ class KawaiiTabBar extends StatelessWidget {
                       pressScale: KawaiiTokens.pressScale,
                       pressTranslateY: 1.0,
                       onTap: () {
-                        KawaiiSoundEngine().play(KawaiiSound.tick);
+                        SoundGate.instance.tryPlay(KawaiiSound.tick);
                         onChanged(i);
                       },
                       child: Center(

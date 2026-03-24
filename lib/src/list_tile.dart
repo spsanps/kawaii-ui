@@ -84,7 +84,7 @@ class KawaiiListTile extends StatelessWidget {
     return KawaiiPressable(
       pressScale: 0.98,
       onTap: () {
-        KawaiiSoundEngine().play(KawaiiSound.tick);
+        SoundGate.instance.tryPlay(KawaiiSound.tick);
         onTap?.call();
       },
       child: tile,

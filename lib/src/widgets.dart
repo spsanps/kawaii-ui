@@ -80,11 +80,8 @@ class KawaiiButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = colors;
     return KawaiiPressable(
-      playSound: false, // KawaiiButton handles its own sound (boop/pop)
-      onTap: () {
-        if (playSound) KawaiiSoundEngine().play(hero ? KawaiiSound.pop : KawaiiSound.boop);
-        onTap?.call();
-      },
+      sound: hero ? KawaiiSound.pop : KawaiiSound.boop,
+      onTap: () { onTap?.call(); },
       child: KawaiiSurface(
         gloss: GlossLevel.full,
         height: _h,
@@ -207,9 +204,9 @@ class KawaiiBadge extends StatelessWidget {
       child: child,
     );
     if (!interactive) return surface;
-    return KawaiiPressable(playSound: false,
+    return KawaiiPressable(
       pressScale: 0.92,
-      onTap: () { if (playSound) KawaiiSoundEngine().play(KawaiiSound.chime); },
+      onTap: () {},
       child: surface,
     );
   }
@@ -239,9 +236,9 @@ class KawaiiTag extends StatelessWidget {
       child: Text(text, style: kBody(size: 11, weight: FontWeight.w800, color: color)),
     );
     if (!interactive) return surface;
-    return KawaiiPressable(playSound: false,
+    return KawaiiPressable(
       pressScale: 0.93,
-      onTap: () { if (playSound) KawaiiSoundEngine().play(KawaiiSound.tick); },
+      onTap: () {},
       child: surface,
     );
   }
@@ -290,9 +287,9 @@ class KawaiiAvatar extends StatelessWidget {
         Text(name!, style: kBody(size: 10, weight: FontWeight.w800, color: KawaiiColors.heading))],
     ]);
     if (!interactive) return avatar;
-    return KawaiiPressable(playSound: false,
+    return KawaiiPressable(
       pressScale: 0.90,
-      onTap: () { if (playSound) KawaiiSoundEngine().play(KawaiiSound.boop); },
+      onTap: () {},
       child: avatar,
     );
   }
@@ -328,9 +325,9 @@ class _KawaiiStatState extends State<KawaiiStat> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return KawaiiPressable(playSound: false,
+    return KawaiiPressable(
       pressScale: 0.92,
-      onTap: () { if (widget.playSound) KawaiiSoundEngine().play(KawaiiSound.tick); },
+      onTap: () {},
       child: Column(children: [
         KawaiiSurface(
           gloss: GlossLevel.medium,
@@ -436,7 +433,7 @@ class _KawaiiToggleState extends State<KawaiiToggle> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () { setState(() => _on = !_on); if (widget.playSound) KawaiiSoundEngine().play(KawaiiSound.toggle); },
+      onTap: () { setState(() => _on = !_on); SoundGate.instance.tryPlay(KawaiiSound.toggle); },
       child: Row(children: [
         AnimatedContainer(
           duration: const Duration(milliseconds: 250), curve: KawaiiCurves.spring,
@@ -650,7 +647,7 @@ class KawaiiInput extends StatelessWidget {
         const SizedBox(width: KawaiiSpacing.md),
         KawaiiButton.pink(btnLabel, small: true,
           i: kawaiiIcon(const SendPainter(color: KawaiiColors.pinkText), size: 12),
-          onTap: () => KawaiiSoundEngine().play(KawaiiSound.send)),
+          onTap: () => SoundGate.instance.tryPlay(KawaiiSound.send)),
       ]),
     );
   }
@@ -711,8 +708,8 @@ class KawaiiNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: KawaiiPressable(playSound: false,
-        onTap: () { if (playSound) KawaiiSoundEngine().play(KawaiiSound.notif); },
+      child: KawaiiPressable(sound: KawaiiSound.notif,
+        onTap: () {},
         pressScale: 0.98,
         child: KawaiiSurface(
           gloss: GlossLevel.subtle,
@@ -763,8 +760,8 @@ class SoundCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return KawaiiPressable(playSound: false,
-      onTap: () { if (playSound) KawaiiSoundEngine().play(sound); },
+    return KawaiiPressable(sound: sound,
+      onTap: () {},
       pressScale: 0.98,
       child: KawaiiSurface(
         gloss: GlossLevel.subtle,

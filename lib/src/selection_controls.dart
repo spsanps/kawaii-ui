@@ -58,7 +58,7 @@ class _KawaiiCheckboxState extends State<KawaiiCheckbox>
   }
 
   void _toggle() {
-    KawaiiSoundEngine().play(KawaiiSound.tick);
+    SoundGate.instance.tryPlay(KawaiiSound.tick);
     widget.onChanged?.call(!widget.value);
   }
 
@@ -180,7 +180,7 @@ class _KawaiiRadioState<T> extends State<KawaiiRadio<T>>
 
   void _select() {
     if (!_selected) {
-      if (widget.playSound) KawaiiSoundEngine().play(KawaiiSound.tick);
+      if (widget.playSound) SoundGate.instance.tryPlay(KawaiiSound.tick);
       widget.onChanged?.call(widget.value);
     }
   }
@@ -293,7 +293,7 @@ class _KawaiiSliderState extends State<KawaiiSlider> {
       onPanUpdate: (d) => _onDrag(context, d.globalPosition),
       onPanEnd: (_) {
         setState(() => _dragging = false);
-        KawaiiSoundEngine().play(KawaiiSound.tick);
+        SoundGate.instance.tryPlay(KawaiiSound.tick);
       },
       child: SizedBox(
         height: _thumbD + 8,
