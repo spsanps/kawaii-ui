@@ -234,10 +234,7 @@ class LightTactileState extends State<LightTactile> {
     // Listener doesn't participate in gesture arena — won't steal
     // taps from child GestureDetectors/KawaiiPressables.
     return Listener(
-      onPointerDown: (_) {
-        setState(() => _pressed = true);
-        KawaiiSoundEngine().play(KawaiiSound.tick);
-      },
+      onPointerDown: (_) => setState(() => _pressed = true),
       onPointerUp: (_) => setState(() => _pressed = false),
       onPointerCancel: (_) => setState(() => _pressed = false),
       child: AnimatedScale(
