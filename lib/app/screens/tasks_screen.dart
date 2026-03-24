@@ -979,7 +979,7 @@ class _TaskCard extends StatelessWidget {
                 ],
               ),
               child: SizedBox(
-                height: 72,
+                height: 80,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
