@@ -80,6 +80,7 @@ class KawaiiButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = colors;
     return KawaiiPressable(
+      playSound: false, // KawaiiButton handles its own sound (boop/pop)
       onTap: () {
         if (playSound) KawaiiSoundEngine().play(hero ? KawaiiSound.pop : KawaiiSound.boop);
         onTap?.call();
@@ -206,7 +207,7 @@ class KawaiiBadge extends StatelessWidget {
       child: child,
     );
     if (!interactive) return surface;
-    return KawaiiPressable(
+    return KawaiiPressable(playSound: false,
       pressScale: 0.92,
       onTap: () { if (playSound) KawaiiSoundEngine().play(KawaiiSound.chime); },
       child: surface,
@@ -238,7 +239,7 @@ class KawaiiTag extends StatelessWidget {
       child: Text(text, style: kBody(size: 11, weight: FontWeight.w800, color: color)),
     );
     if (!interactive) return surface;
-    return KawaiiPressable(
+    return KawaiiPressable(playSound: false,
       pressScale: 0.93,
       onTap: () { if (playSound) KawaiiSoundEngine().play(KawaiiSound.tick); },
       child: surface,
@@ -289,7 +290,7 @@ class KawaiiAvatar extends StatelessWidget {
         Text(name!, style: kBody(size: 10, weight: FontWeight.w800, color: KawaiiColors.heading))],
     ]);
     if (!interactive) return avatar;
-    return KawaiiPressable(
+    return KawaiiPressable(playSound: false,
       pressScale: 0.90,
       onTap: () { if (playSound) KawaiiSoundEngine().play(KawaiiSound.boop); },
       child: avatar,
@@ -327,7 +328,7 @@ class _KawaiiStatState extends State<KawaiiStat> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return KawaiiPressable(
+    return KawaiiPressable(playSound: false,
       pressScale: 0.92,
       onTap: () { if (widget.playSound) KawaiiSoundEngine().play(KawaiiSound.tick); },
       child: Column(children: [
@@ -710,7 +711,7 @@ class KawaiiNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: KawaiiPressable(
+      child: KawaiiPressable(playSound: false,
         onTap: () { if (playSound) KawaiiSoundEngine().play(KawaiiSound.notif); },
         pressScale: 0.98,
         child: KawaiiSurface(
@@ -762,7 +763,7 @@ class SoundCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return KawaiiPressable(
+    return KawaiiPressable(playSound: false,
       onTap: () { if (playSound) KawaiiSoundEngine().play(sound); },
       pressScale: 0.98,
       child: KawaiiSurface(

@@ -275,6 +275,9 @@ class KawaiiPressable extends StatefulWidget {
   final VoidCallback? onTap;
   final double pressScale;
   final double pressTranslateY;
+  /// When true (default), plays KawaiiSound.boop on tap.
+  /// Set false when the parent widget handles its own sound (e.g. KawaiiButton).
+  final bool playSound;
 
   const KawaiiPressable({
     super.key,
@@ -282,6 +285,7 @@ class KawaiiPressable extends StatefulWidget {
     this.onTap,
     this.pressScale = 0.88,
     this.pressTranslateY = 4.0,
+    this.playSound = true,
   });
 
   @override
@@ -339,7 +343,7 @@ class _KawaiiPressableState extends State<KawaiiPressable>
       onTapUp: (_) {
         _release();
         if (widget.onTap != null) {
-          KawaiiSoundEngine().play(KawaiiSound.boop);
+          if (widget.playSound) KawaiiSoundEngine().play(KawaiiSound.boop);
           widget.onTap!.call();
         }
       },
