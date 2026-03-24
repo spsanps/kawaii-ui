@@ -105,14 +105,27 @@ KawaiiExpandableForm(
 
 ## Design Principles
 
-1. **Every surface has gloss** — top-lit shine on all elements (gradient for buttons, flat for bars)
-2. **Everything is clickable** — every leaf element (badges, tags, stats, inputs) bounces + clicks on touch. This is core to the kawaii style — the world feels alive and responsive. Containers (cards) hold things and stay still; leaves ARE things and respond.
-3. **Clickability arises from DRY** — `LightTactile` (bounce + haptic tick) is built into `KawaiiSurface`. Any widget using `KawaiiSurface` with `tactile: true` automatically gets bounce + feedback. No manual wiring. New widgets get it for free.
-4. **Containers vs leaves** — `KawaiiCard` = container (no bounce). `KawaiiBadge`/`KawaiiTag`/`KawaiiAvatar`/`KawaiiStat` = leaves (bounce + tick). The library enforces this hierarchy.
-5. **Single-syllable feedback** — one clean haptic tick per touch, never multi-buzz. Tiered by weight (tick → click → heavy_click).
-6. **Instant response** — press animations are 0ms down. No delay between touch and visual feedback.
-7. **Tokens over magic numbers** — spacing, radii, shadows, opacity from the token system
-8. **Sound is opt-in** — `playSound: false` on all widgets prevents stacking
+### Visual
+1. **Every surface has gloss** — `ShineStyle.gradient` (buttons, badges) or `ShineStyle.flat` (progress bars). Controlled via `KawaiiSurface`.
+2. **Containers vs leaves** — Cards hold things (no bounce, no shine). Badges/tags/avatars/stats ARE things (shine + bounce).
+
+### Interaction
+3. **Everything clickable** — core to the kawaii style. Every leaf element bounces on touch. The world feels alive.
+4. **Two-tier feedback system:**
+   - `LightTactile` = passive visual bounce only (no sound). For decorative leaves. Arises from `KawaiiSurface(tactile: true)`.
+   - `KawaiiPressable` = full press + haptic + sound. For interactive elements. Used by `KawaiiButton`, and by leaves with `interactive: true` or `KawaiiSurface(onTap: ...)`.
+   - **Never both on the same element** — if `KawaiiPressable` wraps it, the surface sets `tactile: false`.
+5. **No double-fire** — `LightTactile` uses `Listener` (passive, no gesture arena). `KawaiiPressable` uses `GestureDetector`. They don't conflict. Sound only comes from `KawaiiPressable`, never from `LightTactile`.
+
+### Sound & Haptics
+6. **Single-syllable feedback** — one haptic per tap. Tiered: `EFFECT_TICK` (selections) → `EFFECT_CLICK` (buttons) → `EFFECT_HEAVY_CLICK` (rewards).
+7. **Per-effect cooldowns** — rapid tapping gives crisp individual clicks, not buzzy mess.
+8. **Native Android haptics** — `VibrationEffect.createPredefined()` via MethodChannel, not Flutter's weak `HapticFeedback`.
+9. **Sound is opt-in** — `playSound: false` on all widgets prevents stacking.
+
+### Speed
+10. **Instant response** — press is 0ms down. No minimum hold delay.
+11. **Overlays are fast** — dialogs 150ms, inline forms 200ms (use `KawaiiExpandableForm` for simple inputs, `showKawaiiBottomSheet` only for complex flows).
 
 ## Performance Principles (enforced by the library)
 
