@@ -42,9 +42,10 @@ class KawaiiBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primary = color ?? KawaiiColors.pinkBottom;
-    final bottomPad = MediaQuery.of(context).padding.bottom;
     if (items.isEmpty) return const SizedBox.shrink();
-    final itemWidth = MediaQuery.of(context).size.width / items.length;
+    final mq = MediaQuery.of(context);
+    final bottomPad = mq.padding.bottom;
+    final itemWidth = mq.size.width / items.length;
 
     return Container(
       decoration: BoxDecoration(

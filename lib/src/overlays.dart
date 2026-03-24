@@ -155,9 +155,8 @@ Future<T?> showKawaiiBottomSheet<T>({
               child: const SizedBox.shrink(),
             ),
           ),
-        builder(ctx),
-        // Keyboard-aware padding so content stays visible
-        SizedBox(height: MediaQuery.of(ctx).viewInsets.bottom),
+        // Wrap content in Flexible to avoid overflow when keyboard opens
+        Flexible(child: builder(ctx)),
       ]),
     ),
   );
