@@ -55,14 +55,14 @@ extension MoodX on Mood {
     Mood.sad => 'Sad',
   };
   Color get color => switch (this) {
-    Mood.happy => const Color(0xFFFFB74D),
+    Mood.happy => const Color(0xFFFF8A80),
     Mood.calm => const Color(0xFF42A5F5),
     Mood.neutral => const Color(0xFFAB47BC),
     Mood.anxious => const Color(0xFFF06292),
     Mood.sad => const Color(0xFF7C4DFF),
   };
   Color get accent => switch (this) {
-    Mood.happy => const Color(0xFFFFE082),
+    Mood.happy => const Color(0xFFFFCDD2),
     Mood.calm => const Color(0xFF90CAF9),
     Mood.neutral => const Color(0xFFCE93D8),
     Mood.anxious => const Color(0xFFF8BBD0),

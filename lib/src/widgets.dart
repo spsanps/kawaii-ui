@@ -402,14 +402,19 @@ class _KawaiiProgressState extends State<KawaiiProgress> with SingleTickerProvid
             builder: (context, _) => Align(
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(widthFactor: _fill.value.clamp(0.01, 1.0),
-                child: KawaiiSurface(tactile: false,
-                  gloss: GlossLevel.full,
-                  shineOpacity: 0.40,
-                  shineHeight: 0.45,
+                child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(KawaiiBorderRadius.xs),
                     color: widget.color),
-                  child: const SizedBox.expand(),
+                  child: Stack(children: [
+                    // Flat white shine bar — matches React: top:2 left:5 right:5 h:40% r:6
+                    Positioned(top: 2, left: 5, right: 5,
+                      child: FractionallySizedBox(heightFactor: 0.4,
+                        child: Container(decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          color: Colors.white.withValues(alpha: 0.3))))),
+                    const SizedBox.expand(),
+                  ]),
                 )),
             ),
           ))),
