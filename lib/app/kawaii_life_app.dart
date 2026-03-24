@@ -37,22 +37,9 @@ class KawaiiLifeHome extends StatefulWidget {
 
 class _KawaiiLifeHomeState extends State<KawaiiLifeHome> {
   final AppStore _store = AppStore();
-  int _tabIndex = 0;
-  late final List<Widget> _screens;
+  final _scaffoldKey = GlobalKey<KawaiiScaffoldState>();
 
-  @override
-  void initState() {
-    super.initState();
-    // Build screens ONCE — IndexedStack keeps them alive across tab switches
-    _screens = [
-      HomeScreen(store: _store, onNavigateToTab: _goToTab),
-      TasksScreen(store: _store),
-      MoodScreen(store: _store),
-      GoalsScreen(store: _store),
-    ];
-  }
-
-  void _goToTab(int index) => setState(() => _tabIndex = index);
+  void _goToTab(int index) => _scaffoldKey.currentState?.setPage(index);
 
   @override
   Widget build(BuildContext context) {
@@ -60,34 +47,23 @@ class _KawaiiLifeHomeState extends State<KawaiiLifeHome> {
       listenable: _store,
       builder: (context, _) {
         final incompleteTasks = _store.tasks.where((t) => !t.done).length;
-        return Scaffold(
-          extendBodyBehindAppBar: true,
-          body: Container(
-            decoration: const BoxDecoration(gradient: LinearGradient(
-              begin: Alignment.topCenter, end: Alignment.bottomCenter,
-              colors: [KawaiiColors.bgTop, KawaiiColors.bgMid, KawaiiColors.bgBottom])),
-            child: KawaiiSparkleField(
-              count: 10,
-              child: SafeArea(
-                bottom: false,
-                child: IndexedStack(
-                  index: _tabIndex,
-                  children: _screens,
-                ),
-              ),
-            ),
-          ),
-          bottomNavigationBar: KawaiiBottomNavBar(
-            currentIndex: _tabIndex,
-            onTap: _goToTab,
-            items: [
-              KawaiiNavItem(icon: kawaiiIcon(HeartPainter(), size: 22), label: 'Home'),
-              KawaiiNavItem(icon: kawaiiIcon(CheckPainter(color: KawaiiColors.pinkBottom), size: 22),
-                label: 'Tasks', badge: incompleteTasks > 0 ? incompleteTasks : null),
-              KawaiiNavItem(icon: kawaiiIcon(MoonPainter(), size: 22), label: 'Mood'),
-              KawaiiNavItem(icon: kawaiiIcon(Star4Painter(), size: 22), label: 'Goals'),
-            ],
-          ),
+        return KawaiiScaffold(
+          key: _scaffoldKey,
+          pages: [
+            HomeScreen(store: _store, onNavigateToTab: _goToTab),
+            TasksScreen(store: _store),
+            MoodScreen(store: _store),
+            GoalsScreen(store: _store),
+          ],
+          navItems: [
+            KawaiiNavItem(icon: kawaiiIcon(const HeartPainter(), size: 22), label: 'Home'),
+            KawaiiNavItem(
+              icon: kawaiiIcon(const CheckPainter(color: KawaiiColors.pinkBottom), size: 22),
+              label: 'Tasks',
+              badge: incompleteTasks > 0 ? incompleteTasks : null),
+            KawaiiNavItem(icon: kawaiiIcon(const MoonPainter(), size: 22), label: 'Mood'),
+            KawaiiNavItem(icon: kawaiiIcon(const Star4Painter(), size: 22), label: 'Goals'),
+          ],
         );
       },
     );

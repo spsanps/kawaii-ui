@@ -5,13 +5,26 @@ import 'package:google_fonts/google_fonts.dart';
 import 'gloss.dart';
 import 'theme.dart';
 import 'widgets.dart';
+import 'navigation.dart';
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  KAWAII SCAFFOLD — gradient background + optional sparkle field
+//  Accepts either a single `body` or `pages` + `navItems` for
+//  automatic IndexedStack + KawaiiBottomNavBar wiring.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-class KawaiiScaffold extends StatelessWidget {
-  final Widget body;
+class KawaiiScaffold extends StatefulWidget {
+  /// Single-page mode: just a body widget.
+  final Widget? body;
+
+  /// Multi-page mode: provide pages + navItems for automatic
+  /// IndexedStack + KawaiiBottomNavBar. Pages are built once
+  /// and kept alive across tab switches (no rebuild lag).
+  final List<Widget>? pages;
+  final List<KawaiiNavItem>? navItems;
+  final int initialPage;
+  final ValueChanged<int>? onPageChanged;
+
   final PreferredSizeWidget? appBar;
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
@@ -20,42 +33,77 @@ class KawaiiScaffold extends StatelessWidget {
 
   const KawaiiScaffold({
     super.key,
-    required this.body,
+    this.body,
+    this.pages,
+    this.navItems,
+    this.initialPage = 0,
+    this.onPageChanged,
     this.appBar,
     this.bottomNavigationBar,
     this.floatingActionButton,
     this.sparkles = true,
     this.sparkleCount = 10,
-  });
+  }) : assert(body != null || (pages != null && navItems != null),
+        'Provide either body or pages+navItems');
+
+  @override
+  KawaiiScaffoldState createState() => KawaiiScaffoldState();
+}
+
+class KawaiiScaffoldState extends State<KawaiiScaffold> {
+  late int _pageIndex;
+
+  /// Programmatically switch to a page (for external navigation).
+  void setPage(int index) => setState(() => _pageIndex = index);
+
+  @override
+  void initState() {
+    super.initState();
+    _pageIndex = widget.initialPage;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isMultiPage = widget.pages != null;
+    final content = isMultiPage
+        ? IndexedStack(index: _pageIndex, children: widget.pages!)
+        : widget.body!;
+
+    final navBar = isMultiPage
+        ? KawaiiBottomNavBar(
+            items: widget.navItems!,
+            currentIndex: _pageIndex,
+            onTap: (i) {
+              setState(() => _pageIndex = i);
+              widget.onPageChanged?.call(i);
+            },
+          )
+        : widget.bottomNavigationBar;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: appBar,
-      bottomNavigationBar: bottomNavigationBar,
-      floatingActionButton: floatingActionButton,
+      appBar: widget.appBar,
+      bottomNavigationBar: navBar,
+      floatingActionButton: widget.floatingActionButton,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              KawaiiColors.bgTop,
-              KawaiiColors.bgMid,
-              KawaiiColors.bgBottom,
-            ],
+            colors: [KawaiiColors.bgTop, KawaiiColors.bgMid, KawaiiColors.bgBottom],
           ),
         ),
         child: sparkles
             ? KawaiiSparkleField(
-                count: sparkleCount,
-                child: SafeArea(child: body),
+                count: widget.sparkleCount,
+                child: SafeArea(bottom: false, child: content),
               )
-            : SafeArea(child: body),
+            : SafeArea(bottom: false, child: content),
       ),
     );
   }
+
+  bool get sparkles => widget.sparkles;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -85,8 +133,6 @@ class KawaiiAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return ClipRRect(
       child: BackdropFilter(
-        // [OPT #8] Reduced blur sigma from 20 to 10 — visually similar
-        // frosted glass effect but significantly cheaper GPU-side.
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: KawaiiSurface(tactile: false,
           gloss: GlossLevel.subtle,
@@ -99,7 +145,7 @@ class KawaiiAppBar extends StatelessWidget implements PreferredSizeWidget {
                 KawaiiColors.pinkTop.withValues(alpha: KawaiiOpacity.medium),
               ],
             ),
-            border: Border(
+            border: const Border(
               bottom: BorderSide(
                 color: KawaiiColors.cardBorder,
                 width: KawaiiBorderWidth.thin,
