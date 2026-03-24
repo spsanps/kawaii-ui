@@ -111,11 +111,26 @@ KawaiiExpandableForm(
 
 ### Interaction
 3. **Everything clickable** — core to the kawaii style. Every leaf element bounces on touch. The world feels alive.
-4. **Two-tier feedback system:**
-   - `LightTactile` = passive visual bounce only (no sound). For decorative leaves. Arises from `KawaiiSurface(tactile: true)`.
-   - `KawaiiPressable` = full press + haptic + sound. For interactive elements. Used by `KawaiiButton`, and by leaves with `interactive: true` or `KawaiiSurface(onTap: ...)`.
-   - **Never both on the same element** — if `KawaiiPressable` wraps it, the surface sets `tactile: false`.
-5. **No double-fire** — `LightTactile` uses `Listener` (passive, no gesture arena). `KawaiiPressable` uses `GestureDetector`. They don't conflict. Sound only comes from `KawaiiPressable`, never from `LightTactile`.
+4. **Two-tier feedback system (auto-managed):**
+   - `LightTactile` = visual bounce + haptic tick. For standalone leaves.
+   - `KawaiiPressable` = full press + haptic + sound. For interactive elements.
+   - **`_PressableScope` (InheritedWidget) prevents double-fire automatically.** When `KawaiiPressable` wraps an element, it broadcasts via `_PressableScope`. Any descendant `KawaiiSurface` detects this and skips `LightTactile`. **Developers never need to set `tactile: false` manually** — the library architecture handles it.
+5. **No double-fire guaranteed** — `LightTactile` uses `Listener` (no gesture arena). `_PressableScope` prevents LightTactile from activating inside KawaiiPressable. Sound only fires once per tap, from whichever handler owns the interaction.
+
+### How the library forces correct usage
+
+| Principle | Forcing mechanism | Dev can't break it because... |
+|-----------|-------------------|-------------------------------|
+| No double bounce | `_PressableScope` InheritedWidget | Auto-detected, no manual flag needed |
+| Everything clickable | `tactile: true` default on `KawaiiSurface` | Leaves bounce by default, containers opt out |
+| Lazy lists | `KawaiiListView` has no `children:` param | Impossible to build eagerly |
+| No tab lag | `KawaiiScaffold(pages:)` uses IndexedStack | Can't use AnimatedSwitcher |
+| Instant forms | `KawaiiExpandableForm` | No route transition involved |
+| Circular clipping | `KawaiiSurface` detects `BoxShape.circle` | Auto-switches to ClipOval |
+| Proper shine | `ShineStyle` enum on `KawaiiSurface` | Gradient for buttons, flat for bars |
+| No keyboard lag | `showKawaiiBottomSheet` handles insets | Dev can't add MediaQuery.viewInsets |
+| Isolated repaints | All animated widgets self-wrap `RepaintBoundary` | Dev doesn't need to remember |
+| Cached styles | `kHeading()`/`kBody()` pre-cached | GoogleFonts called once at module init |
 
 ### Sound & Haptics
 6. **Single-syllable feedback** — one haptic per tap. Tiered: `EFFECT_TICK` (selections) → `EFFECT_CLICK` (buttons) → `EFFECT_HEAVY_CLICK` (rewards).

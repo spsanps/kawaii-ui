@@ -1011,7 +1011,7 @@ class _TaskCard extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             // Card body
-            KawaiiSurface(
+            KawaiiSurface(tactile: false,
               gloss: GlossLevel.subtle,
               shineOpacity: isDone ? 0.18 : 0.35,
               shineHeight: 0.40,
