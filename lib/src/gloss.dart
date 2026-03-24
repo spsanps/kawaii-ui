@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'sound_engine.dart';
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  DESIGN TOKENS — all magic numbers live here, not in widgets
@@ -233,7 +234,10 @@ class LightTactileState extends State<LightTactile> {
     // Listener doesn't participate in gesture arena — won't steal
     // taps from child GestureDetectors/KawaiiPressables.
     return Listener(
-      onPointerDown: (_) => setState(() => _pressed = true),
+      onPointerDown: (_) {
+        setState(() => _pressed = true);
+        KawaiiSoundEngine().play(KawaiiSound.tick);
+      },
       onPointerUp: (_) => setState(() => _pressed = false),
       onPointerCancel: (_) => setState(() => _pressed = false),
       child: AnimatedScale(
