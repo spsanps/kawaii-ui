@@ -106,10 +106,9 @@ class _TasksScreenState extends State<TasksScreen> {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheetState) {
           return Padding(
-            padding: EdgeInsets.fromLTRB(
+            padding: const EdgeInsets.fromLTRB(
               KawaiiSpacing.page, KawaiiSpacing.lg,
-              KawaiiSpacing.page,
-              MediaQuery.of(ctx).viewInsets.bottom + KawaiiSpacing.xxl,
+              KawaiiSpacing.page, KawaiiSpacing.xxl,
             ),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               // ── Title ──
