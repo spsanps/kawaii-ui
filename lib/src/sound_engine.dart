@@ -24,18 +24,36 @@ class KawaiiSoundEngine {
   set muted(bool v) => _muted = v;
   void toggleMute() => _muted = !_muted;
 
-  /// Pre-generate all sounds lazily after first frame
+  bool _preloaded = false;
+
+  /// Pre-generate all sounds and load into native SoundPool for instant playback
   void _preCache() {
     if (_cached || _caching) return;
     _caching = true;
-    // Defer to avoid blocking startup
     Future.microtask(() {
       for (final s in KawaiiSound.values) {
         _cache[s] = List.generate(3, (_) => _buildSound(s));
       }
       _cached = true;
       _caching = false;
+      // Pre-load first variant of each sound into SoundPool
+      _preloadToNative();
     });
+  }
+
+  /// Send WAV data to native SoundPool for instant playback
+  void _preloadToNative() {
+    if (_preloaded) return;
+    _preloaded = true;
+    for (final s in KawaiiSound.values) {
+      final variants = _cache[s];
+      if (variants != null && variants.isNotEmpty) {
+        _ch.invokeMethod('preloadWav', {
+          'name': s.name,
+          'data': variants[0],
+        }).catchError((_) {});
+      }
+    }
   }
 
   double _vary(double f) => f * (0.93 + _rng.nextDouble() * 0.14);
@@ -151,16 +169,13 @@ class KawaiiSoundEngine {
     });
   }
 
-  /// Play a sound — picks from pre-cached variants for micro-variation
+  /// Play a sound — instant via SoundPool (pre-loaded at startup).
+  /// Haptic fires simultaneously. Both gated by SoundGate (no double-fire).
   void play(KawaiiSound sound) {
-    // Native haptics via Android Vibrator API for strong, quality feedback.
-    // Falls back to Flutter HapticFeedback if channel not available.
     _playHaptic(sound);
     if (_muted) return;
-    final variants = _cache[sound];
-    if (variants == null || variants.isEmpty) return;
-    final wav = variants[_rng.nextInt(variants.length)];
-    _ch.invokeMethod('playWav', wav).catchError((_) {});
+    // Use SoundPool for instant playback (pre-loaded at startup)
+    _ch.invokeMethod('playSound', {'name': sound.name}).catchError((_) {});
   }
 }
 
