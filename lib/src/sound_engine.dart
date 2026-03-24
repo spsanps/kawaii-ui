@@ -122,25 +122,30 @@ class KawaiiSoundEngine {
     return _toWav(_mix(layers));
   }
 
-  // Throttle: skip haptic if last one was <40ms ago (prevents spam buzz)
-  DateTime _lastHaptic = DateTime(0);
+  // Per-effect cooldowns to prevent spam buzz on rapid tapping
+  final Map<String, int> _hapticLastMs = {};
+
+  bool _hapticAllowed(String effect, int minGapMs) {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final last = _hapticLastMs[effect] ?? 0;
+    if (now - last < minGapMs) return false;
+    _hapticLastMs[effect] = now;
+    return true;
+  }
 
   void _playHaptic(KawaiiSound sound) {
-    final now = DateTime.now();
-    if (now.difference(_lastHaptic).inMilliseconds < 40) return;
-    _lastHaptic = now;
-
-    // Map sound → appropriate haptic intensity
-    final effect = switch (sound) {
-      KawaiiSound.tick => 'tick',           // lightest — filter taps, selections
-      KawaiiSound.toggle => 'click',        // clean click — switches
-      KawaiiSound.boop => 'click',          // standard button press
-      KawaiiSound.pop => 'heavy_click',     // hero button — more weight
-      KawaiiSound.send => 'click',          // message sent
-      KawaiiSound.chime => 'click',         // arrival
-      KawaiiSound.notif => 'heavy_click',   // notification — attention
-      KawaiiSound.reward => 'heavy_click',  // achievement — celebration
+    // Map sound → effect + per-effect cooldown
+    final (String effect, int cooldownMs) = switch (sound) {
+      KawaiiSound.tick     => ('tick', 50),        // lightest — selections
+      KawaiiSound.toggle   => ('click', 70),       // switches
+      KawaiiSound.boop     => ('click', 70),       // standard button
+      KawaiiSound.pop      => ('heavy_click', 70), // hero button
+      KawaiiSound.send     => ('click', 70),       // message sent
+      KawaiiSound.chime    => ('click', 120),       // arrival
+      KawaiiSound.notif    => ('heavy_click', 140), // notification
+      KawaiiSound.reward   => ('heavy_click', 240), // achievement
     };
+    if (!_hapticAllowed(effect, cooldownMs)) return;
     _hapticCh.invokeMethod('predefined', {'effect': effect}).catchError((_) {
       HapticFeedback.mediumImpact();
     });

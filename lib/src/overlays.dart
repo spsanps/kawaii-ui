@@ -21,12 +21,12 @@ Future<T?> showKawaiiDialog<T>({
     barrierDismissible: true,
     barrierLabel: 'Dismiss',
     barrierColor: const Color(0x80B4648C),
-    transitionDuration: const Duration(milliseconds: 300),
+    transitionDuration: const Duration(milliseconds: 150),
     transitionBuilder: (ctx, anim, secondaryAnim, child) {
-      final curved = CurvedAnimation(parent: anim, curve: KawaiiCurves.spring);
       return FadeTransition(
         opacity: anim,
-        child: ScaleTransition(scale: Tween(begin: 0.9, end: 1.0).animate(curved), child: child),
+        child: ScaleTransition(scale: Tween(begin: 0.95, end: 1.0).animate(
+          CurvedAnimation(parent: anim, curve: Curves.easeOut)), child: child),
       );
     },
     pageBuilder: (ctx, _, __) {
