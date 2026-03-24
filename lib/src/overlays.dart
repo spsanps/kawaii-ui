@@ -29,16 +29,25 @@ Future<T?> showKawaiiDialog<T>({
         child: ScaleTransition(scale: Tween(begin: 0.9, end: 1.0).animate(curved), child: child),
       );
     },
-    pageBuilder: (ctx, _, __) => Center(
-      child: Material(
-        color: Colors.transparent,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 340),
-          child: _KawaiiDialogBody(title: title, content: content,
-            actions: actions, scrollable: scrollable, body: body),
+    pageBuilder: (ctx, _, __) {
+      final insets = MediaQuery.of(ctx).viewInsets;
+      return AnimatedPadding(
+        duration: const Duration(milliseconds: 200),
+        padding: EdgeInsets.only(bottom: insets.bottom),
+        child: Center(
+          child: Material(
+            color: Colors.transparent,
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 340),
+                child: _KawaiiDialogBody(title: title, content: content,
+                  actions: actions, scrollable: scrollable, body: body),
+              ),
+            ),
+          ),
         ),
-      ),
-    ),
+      );
+    },
   );
 }
 
@@ -146,6 +155,8 @@ Future<T?> showKawaiiBottomSheet<T>({
             ),
           ),
         builder(ctx),
+        // Keyboard-aware padding so content stays visible
+        SizedBox(height: MediaQuery.of(ctx).viewInsets.bottom),
       ]),
     ),
   );
