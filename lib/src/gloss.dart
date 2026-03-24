@@ -156,21 +156,30 @@ class KawaiiSurface extends StatelessWidget {
                 ),
               )),
 
-            // Shine — full-width top-lit gradient, fast falloff
+            // Shine — flat white rectangle at top, fixed pixel height.
+            // Matches React JSX: top:2 left:6 right:6 h:36% borderRadius:10
+            // Uses LayoutBuilder to compute height from parent.
             if (_shine > 0)
-              Positioned.fill(child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.0, shineHeight * 0.5, shineHeight],
-                    colors: [
-                      Colors.white.withValues(alpha: _shine),
-                      Colors.white.withValues(alpha: _shine * 0.12),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
+              Positioned.fill(child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final h = constraints.maxHeight;
+                  final shineH = h.isFinite ? (h * shineHeight).clamp(4.0, 20.0) : 8.0;
+                  return Padding(
+                    padding: EdgeInsets.only(top: 2, left: _isCircle ? h * 0.15 : 6, right: _isCircle ? h * 0.15 : 6),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        height: shineH,
+                        decoration: BoxDecoration(
+                          borderRadius: _isCircle
+                              ? BorderRadius.circular(999)
+                              : BorderRadius.circular(10),
+                          color: Colors.white.withValues(alpha: _shine),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               )),
 
             // Content ON TOP (highest z-order, like CSS z-index: 1)
