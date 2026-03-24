@@ -387,8 +387,11 @@ class _KawaiiPressableState extends State<KawaiiPressable>
             ),
           );
         },
-        // _PressableScope tells descendant KawaiiSurfaces to skip LightTactile
-        child: _PressableScope(child: widget.child),
+        // Only broadcast scope when onTap is set (sound will fire).
+        // Without onTap, descendants should keep their own tactile feedback.
+        child: widget.onTap != null
+            ? _PressableScope(child: widget.child)
+            : widget.child,
       ),
     );
   }
