@@ -123,8 +123,22 @@ class KawaiiSoundEngine {
 
   /// Play a sound — picks from pre-cached variants for micro-variation
   void play(KawaiiSound sound) {
-    // Single clean click for everything — multi-buzz feels bad
-    HapticFeedback.selectionClick();
+    // Tiered haptics — single hit, not multi-buzz.
+    // Safe to tier now that stacking is fixed (playSound param + no overlay auto-play).
+    switch (sound) {
+      case KawaiiSound.tick:
+      case KawaiiSound.toggle:
+        HapticFeedback.lightImpact();    // light tap — selections, toggles
+      case KawaiiSound.boop:
+      case KawaiiSound.pop:
+      case KawaiiSound.send:
+        HapticFeedback.lightImpact();    // clean thud — button presses
+      case KawaiiSound.chime:
+      case KawaiiSound.notif:
+        HapticFeedback.mediumImpact();   // solid thud — arrivals, notifications
+      case KawaiiSound.reward:
+        HapticFeedback.mediumImpact();   // deep thud — completions, celebrations
+    }
     if (_muted) return;
     final variants = _cache[sound];
     if (variants == null || variants.isEmpty) return;
