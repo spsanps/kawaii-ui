@@ -155,12 +155,43 @@ Future<T?> showKawaiiBottomSheet<T>({
               child: const SizedBox.shrink(),
             ),
           ),
-        builder(ctx),
+        _DeferredSheetContent(builder: builder),
         // Keyboard-aware padding so content stays visible
         SizedBox(height: MediaQuery.of(ctx).viewInsets.bottom),
       ]),
     ),
   );
+}
+
+/// Defers sheet content build to after the first frame.
+/// Shows a compact placeholder during the slide-in animation,
+/// then swaps to the real content. This prevents jank from
+/// building 60+ widgets during the route transition.
+class _DeferredSheetContent extends StatefulWidget {
+  final WidgetBuilder builder;
+  const _DeferredSheetContent({required this.builder});
+  @override
+  State<_DeferredSheetContent> createState() => _DeferredSheetContentState();
+}
+
+class _DeferredSheetContentState extends State<_DeferredSheetContent> {
+  bool _ready = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() => _ready = true);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_ready) {
+      return const SizedBox(height: 120); // placeholder during slide-in
+    }
+    return widget.builder(context);
+  }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

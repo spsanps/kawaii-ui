@@ -156,24 +156,22 @@ class KawaiiSurface extends StatelessWidget {
                 ),
               )),
 
-            // Shine — fixed-height band at top edge, not full surface
+            // Shine — full-width top-lit gradient, fast falloff
             if (_shine > 0)
-              Positioned(
-                top: 0, left: 0, right: 0,
-                height: height != null ? height! * shineHeight : 16,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.white.withValues(alpha: _shine),
-                        Colors.transparent,
-                      ],
-                    ),
+              Positioned.fill(child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.0, shineHeight * 0.5, shineHeight],
+                    colors: [
+                      Colors.white.withValues(alpha: _shine),
+                      Colors.white.withValues(alpha: _shine * 0.12),
+                      Colors.transparent,
+                    ],
                   ),
                 ),
-              ),
+              )),
 
             // Content ON TOP (highest z-order, like CSS z-index: 1)
             Padding(padding: padding, child: child),
