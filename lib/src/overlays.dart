@@ -30,17 +30,21 @@ Future<T?> showKawaiiDialog<T>({
       );
     },
     pageBuilder: (ctx, _, __) {
-      final insets = MediaQuery.of(ctx).viewInsets;
-      return AnimatedPadding(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.only(bottom: insets.bottom),
+      return SafeArea(
         child: Center(
-          child: Material(
-            color: Colors.transparent,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 340),
-              child: _KawaiiDialogBody(title: title, content: content,
-                actions: actions, scrollable: scrollable, body: body),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: KawaiiSpacing.xl, right: KawaiiSpacing.xl,
+                bottom: MediaQuery.viewInsetsOf(ctx).bottom),
+              child: Material(
+                color: Colors.transparent,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 340),
+                  child: _KawaiiDialogBody(title: title, content: content,
+                    actions: actions, scrollable: scrollable, body: body),
+                ),
+              ),
             ),
           ),
         ),
