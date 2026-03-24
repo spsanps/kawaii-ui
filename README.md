@@ -105,11 +105,14 @@ KawaiiExpandableForm(
 
 ## Design Principles
 
-1. **Every surface has gloss** — top-lit shine gradient on all interactive elements
-2. **Everything is pressable** — instant press (0ms) + bouncy spring release (200ms)
-3. **Single-syllable feedback** — one clean haptic click per action, never multi-buzz
-4. **Tokens over magic numbers** — spacing, radii, shadows, opacity from the token system
-5. **Sound is opt-in** — `playSound: false` on all widgets prevents stacking
+1. **Every surface has gloss** — top-lit shine on all elements (gradient for buttons, flat for bars)
+2. **Everything is clickable** — every leaf element (badges, tags, stats, inputs) bounces + clicks on touch. This is core to the kawaii style — the world feels alive and responsive. Containers (cards) hold things and stay still; leaves ARE things and respond.
+3. **Clickability arises from DRY** — `LightTactile` (bounce + haptic tick) is built into `KawaiiSurface`. Any widget using `KawaiiSurface` with `tactile: true` automatically gets bounce + feedback. No manual wiring. New widgets get it for free.
+4. **Containers vs leaves** — `KawaiiCard` = container (no bounce). `KawaiiBadge`/`KawaiiTag`/`KawaiiAvatar`/`KawaiiStat` = leaves (bounce + tick). The library enforces this hierarchy.
+5. **Single-syllable feedback** — one clean haptic tick per touch, never multi-buzz. Tiered by weight (tick → click → heavy_click).
+6. **Instant response** — press animations are 0ms down. No delay between touch and visual feedback.
+7. **Tokens over magic numbers** — spacing, radii, shadows, opacity from the token system
+8. **Sound is opt-in** — `playSound: false` on all widgets prevents stacking
 
 ## Performance Principles (enforced by the library)
 
