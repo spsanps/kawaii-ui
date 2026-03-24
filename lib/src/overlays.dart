@@ -21,7 +21,7 @@ Future<T?> showKawaiiDialog<T>({
     barrierDismissible: true,
     barrierLabel: 'Dismiss',
     barrierColor: const Color(0x80B4648C),
-    transitionDuration: const Duration(milliseconds: 150),
+    transitionDuration: const Duration(milliseconds: 100),
     transitionBuilder: (ctx, anim, secondaryAnim, child) {
       return FadeTransition(
         opacity: anim,

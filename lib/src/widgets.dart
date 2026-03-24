@@ -407,12 +407,11 @@ class _KawaiiProgressState extends State<KawaiiProgress> with SingleTickerProvid
                     borderRadius: BorderRadius.circular(KawaiiBorderRadius.xs),
                     color: widget.color),
                   child: Stack(children: [
-                    // Flat white shine bar — matches React: top:2 left:5 right:5 h:40% r:6
+                    // Flat white shine bar — matches React: top:2 left:5 right:5 h:6px r:6
                     Positioned(top: 2, left: 5, right: 5,
-                      child: FractionallySizedBox(heightFactor: 0.4,
-                        child: Container(decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          color: Colors.white.withValues(alpha: 0.3))))),
+                      child: Container(height: 6, decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.white.withValues(alpha: 0.35)))),
                     const SizedBox.expand(),
                   ]),
                 )),
