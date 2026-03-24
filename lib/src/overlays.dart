@@ -126,6 +126,7 @@ Future<T?> showKawaiiBottomSheet<T>({
     backgroundColor: Colors.transparent,
     barrierColor: const Color(0x80B4648C),
     isScrollControlled: true,
+    useSafeArea: true,
     builder: (ctx) => Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
