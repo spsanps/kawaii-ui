@@ -338,7 +338,10 @@ class _KawaiiPressableState extends State<KawaiiPressable>
       onTapDown: (_) => _press(),
       onTapUp: (_) {
         _release();
-        widget.onTap?.call();
+        if (widget.onTap != null) {
+          KawaiiSoundEngine().play(KawaiiSound.boop);
+          widget.onTap!.call();
+        }
       },
       onTapCancel: () => _release(),
       child: AnimatedBuilder(

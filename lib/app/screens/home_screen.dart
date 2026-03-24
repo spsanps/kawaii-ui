@@ -647,7 +647,7 @@ class _CircularProgressRingState extends State<_CircularProgressRing>
   Widget build(BuildContext context) {
     return KawaiiPressable(
       pressScale: 0.92,
-      onTap: () => KawaiiSoundEngine().play(KawaiiSound.tick),
+      onTap: () {},
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -895,7 +895,6 @@ class _SwipeableTaskCardState extends State<_SwipeableTaskCard> {
   void _handleCheck(bool val) {
     if (_checked) return;
     setState(() => _checked = true);
-    KawaiiSoundEngine().play(KawaiiSound.boop);
     // Delay actual completion so the user sees the check + can undo
     Future.delayed(const Duration(milliseconds: 600), () {
       if (!mounted || !_checked) return;
@@ -1154,7 +1153,6 @@ class _GoalCardState extends State<_GoalCard>
     return KawaiiPressable(
       pressScale: 0.96,
       onTap: () {
-        KawaiiSoundEngine().play(KawaiiSound.boop);
         widget.store.incrementGoal(goal.id);
       },
       child: SizedBox(

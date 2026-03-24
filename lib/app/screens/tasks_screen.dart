@@ -216,7 +216,6 @@ class _TasksScreenState extends State<TasksScreen> {
                     pressTranslateY: 2,
                     onTap: () {
                         setSheetState(() => selectedCat = cat);
-                        KawaiiSoundEngine().play(KawaiiSound.tick);
                     },
                     child: AnimatedScale(
                       scale: selected ? 1.08 : 1.0,
@@ -304,7 +303,6 @@ class _TasksScreenState extends State<TasksScreen> {
                       onTap: () {
                           setSheetState(
                               () => selectedPriority = p);
-                          KawaiiSoundEngine().play(KawaiiSound.tick);
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -413,7 +411,6 @@ class _TasksScreenState extends State<TasksScreen> {
                     pressTranslateY: 2,
                     onTap: () {
                       setState(() => _selectedFilter = i);
-                      KawaiiSoundEngine().play(KawaiiSound.tick);
                     },
                     child: AnimatedScale(
                       scale: selected ? 1.06 : 1.0,

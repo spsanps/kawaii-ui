@@ -161,7 +161,6 @@ class GoalsScreen extends StatelessWidget {
                       pressTranslateY: 2,
                       onTap: () {
                         setState(() => selected = c);
-                        KawaiiSoundEngine().play(KawaiiSound.tick);
                       },
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 250),

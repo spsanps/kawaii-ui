@@ -392,7 +392,6 @@ class _MoodScreenState extends State<MoodScreen>
                   pressTranslateY: 2,
                   onTap: () {
                     setState(() => _selectedMood = mood);
-                    KawaiiSoundEngine().play(KawaiiSound.tick);
                   },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -506,7 +505,6 @@ class _MoodScreenState extends State<MoodScreen>
                         if (selected) { _selectedFeelings.remove(f); }
                         else { _selectedFeelings.add(f); }
                       });
-                      KawaiiSoundEngine().play(KawaiiSound.tick);
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
