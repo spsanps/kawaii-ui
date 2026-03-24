@@ -137,8 +137,10 @@ class KawaiiSurface extends StatelessWidget {
         pressScale: 0.92, pressTranslateY: 2.0,
         onTap: onTap, child: surface);
     }
-    // Passive tactile → lightweight bounce + haptic tick (standalone leaf)
-    if (tactile) return LightTactile(playSound: true, child: surface);
+    // Passive tactile — but skip if inside a KawaiiPressable (it handles press)
+    if (tactile && !_PressableScope.isActive(context)) {
+      return LightTactile(playSound: true, child: surface);
+    }
     return surface;
   }
 
@@ -251,6 +253,16 @@ class LightTactileState extends State<LightTactile> {
   }
 }
 
+/// Inherited flag: "a KawaiiPressable ancestor is handling press".
+/// KawaiiSurface checks this to avoid double tactile feedback.
+class _PressableScope extends InheritedWidget {
+  const _PressableScope({required super.child});
+  static bool isActive(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_PressableScope>() != null;
+  @override
+  bool updateShouldNotify(_PressableScope old) => false;
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  KAWAII PRESSABLE — zero-delay press, bouncy release
 //  [OPT #3] Consolidated 3 implicit animations (AnimatedScale +
@@ -343,7 +355,8 @@ class _KawaiiPressableState extends State<KawaiiPressable>
             ),
           );
         },
-        child: widget.child,
+        // _PressableScope tells descendant KawaiiSurfaces to skip LightTactile
+        child: _PressableScope(child: widget.child),
       ),
     );
   }
