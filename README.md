@@ -167,6 +167,21 @@ controller.addListener(() { ... });
 showKawaiiBottomSheet(builder: (_) => StatefulBuilder(...))
 ```
 
+## Animation Speed Principles
+
+| Element | Duration | Why |
+|---------|----------|-----|
+| Button press | 0ms down, 200ms spring release | Instant response, bouncy feel |
+| Dialog appear | 150ms fade+scale | Fast enough to feel instant |
+| Bottom sheet slide | 250ms (Flutter default) | Use `KawaiiExpandableForm` for simple inputs instead |
+| Inline form expand | 200ms AnimatedSize | No route transition = instant feel |
+| Tab switch | 0ms (IndexedStack) | Pages already built, just swap visibility |
+| List item entrance | None | Items should just *be there* — stagger animations on list items feel sluggish |
+| Checkbox check | 200ms spring | Quick but visible confirmation |
+| Progress bar fill | 800ms ease-out | Slow enough to read, fast enough to not wait |
+
+**Rule: if the user is waiting for it, it's too slow.** Animations should confirm an action, not delay it.
+
 ## Haptic Principles (enforced by the library)
 
 | Principle | How |
