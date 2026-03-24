@@ -277,17 +277,7 @@ class _KawaiiPressableState extends State<KawaiiPressable>
   }
 
   void _release() {
-    final elapsed = DateTime.now().difference(_pressedAt);
-    final remaining = const Duration(milliseconds: 80) - elapsed;
-    if (remaining > Duration.zero) {
-      // Hold pressed state briefly, then animate to normal
-      Future.delayed(remaining, () {
-        if (mounted) _ctrl.forward();
-      });
-    } else {
-      // Animate back to normal with spring curve
-      _ctrl.forward();
-    }
+    _ctrl.forward();
   }
 
   @override

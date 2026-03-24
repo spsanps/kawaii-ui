@@ -38,6 +38,19 @@ class KawaiiLifeHome extends StatefulWidget {
 class _KawaiiLifeHomeState extends State<KawaiiLifeHome> {
   final AppStore _store = AppStore();
   int _tabIndex = 0;
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    // Build screens ONCE — IndexedStack keeps them alive across tab switches
+    _screens = [
+      HomeScreen(store: _store, onNavigateToTab: _goToTab),
+      TasksScreen(store: _store),
+      MoodScreen(store: _store),
+      GoalsScreen(store: _store),
+    ];
+  }
 
   void _goToTab(int index) => setState(() => _tabIndex = index);
 
@@ -57,28 +70,9 @@ class _KawaiiLifeHomeState extends State<KawaiiLifeHome> {
               count: 10,
               child: SafeArea(
                 bottom: false,
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  switchInCurve: Curves.easeOut,
-                  switchOutCurve: Curves.easeIn,
-                  transitionBuilder: (child, animation) {
-                    return FadeTransition(opacity: animation,
-                      child: SlideTransition(
-                        position: Tween<Offset>(
-                          begin: const Offset(0, 0.03),
-                          end: Offset.zero,
-                        ).animate(animation),
-                        child: child));
-                  },
-                  child: KeyedSubtree(
-                    key: ValueKey(_tabIndex),
-                    child: [
-                      HomeScreen(store: _store, onNavigateToTab: _goToTab),
-                      TasksScreen(store: _store),
-                      MoodScreen(store: _store),
-                      GoalsScreen(store: _store),
-                    ][_tabIndex],
-                  ),
+                child: IndexedStack(
+                  index: _tabIndex,
+                  children: _screens,
                 ),
               ),
             ),
