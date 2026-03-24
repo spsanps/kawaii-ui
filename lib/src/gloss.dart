@@ -137,8 +137,8 @@ class KawaiiSurface extends StatelessWidget {
         pressScale: 0.92, pressTranslateY: 2.0,
         onTap: onTap, child: surface);
     }
-    // Passive tactile → lightweight implicit animation (no controller)
-    if (tactile) return LightTactile(child: surface);
+    // Passive tactile → lightweight bounce + haptic tick (standalone leaf)
+    if (tactile) return LightTactile(playSound: true, child: surface);
     return surface;
   }
 
@@ -221,7 +221,10 @@ class KawaiiSurface extends StatelessWidget {
 
 class LightTactile extends StatefulWidget {
   final Widget child;
-  const LightTactile({required this.child});
+  /// When true, plays haptic tick on press (for standalone leaves).
+  /// When false, visual bounce only (for elements inside KawaiiPressable).
+  final bool playSound;
+  const LightTactile({required this.child, this.playSound = false});
   @override
   State<LightTactile> createState() => LightTactileState();
 }
@@ -231,10 +234,11 @@ class LightTactileState extends State<LightTactile> {
 
   @override
   Widget build(BuildContext context) {
-    // Listener doesn't participate in gesture arena — won't steal
-    // taps from child GestureDetectors/KawaiiPressables.
     return Listener(
-      onPointerDown: (_) => setState(() => _pressed = true),
+      onPointerDown: (_) {
+        setState(() => _pressed = true);
+        if (widget.playSound) KawaiiSoundEngine().play(KawaiiSound.tick);
+      },
       onPointerUp: (_) => setState(() => _pressed = false),
       onPointerCancel: (_) => setState(() => _pressed = false),
       child: AnimatedScale(
