@@ -263,7 +263,7 @@ class _MoodScreenState extends State<MoodScreen>
     with TickerProviderStateMixin {
   Mood _selectedMood = Mood.happy;
   Set<Feeling> _selectedFeelings = {};
-  double _intensity = 0.5;
+  final ValueNotifier<double> _intensity = ValueNotifier<double>(0.5);
   final _noteCtrl = TextEditingController();
 
   // Pulse animation for selected mood face
@@ -315,6 +315,7 @@ class _MoodScreenState extends State<MoodScreen>
   @override
   void dispose() {
     _noteCtrl.dispose();
+    _intensity.dispose();
     _pulseCtrl.dispose();
     _saveCtrl.dispose();
     super.dispose();
@@ -324,7 +325,7 @@ class _MoodScreenState extends State<MoodScreen>
     if (_isSaving) return;
 
     final note = _noteCtrl.text.trim();
-    widget.store.addMood(_selectedMood, _selectedFeelings.toList(), _intensity, note.isEmpty ? null : note);
+    widget.store.addMood(_selectedMood, _selectedFeelings.toList(), _intensity.value, note.isEmpty ? null : note);
     _noteCtrl.clear();
 
     // Trigger save animation
@@ -335,7 +336,7 @@ class _MoodScreenState extends State<MoodScreen>
           _isSaving = false;
           _selectedMood = Mood.happy;
           _selectedFeelings = {};
-          _intensity = 0.5;
+          _intensity.value = 0.5;
         });
       }
     });
@@ -401,34 +402,35 @@ class _MoodScreenState extends State<MoodScreen>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      AnimatedBuilder(
-                        animation: _pulseAnim,
-                        builder: (context, child) {
-                          final glowOpacity = selected
-                              ? 0.15 + _pulseAnim.value * 0.15
-                              : 0.0;
-                          final scale = selected
-                              ? 1.0 + _pulseAnim.value * 0.06
-                              : 1.0;
-                          return Transform.scale(
-                            scale: scale,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: selected
-                                    ? [
-                                        BoxShadow(
-                                          color: mood.color.withValues(alpha: glowOpacity),
-                                          blurRadius: 16 + _pulseAnim.value * 8,
-                                          spreadRadius: 2 + _pulseAnim.value * 3,
-                                        ),
-                                      ]
-                                    : [],
+                      RepaintBoundary(
+                        child: AnimatedBuilder(
+                          animation: _pulseAnim,
+                          builder: (context, child) {
+                            final glowOpacity = selected
+                                ? 0.15 + _pulseAnim.value * 0.15
+                                : 0.0;
+                            final scale = selected
+                                ? 1.0 + _pulseAnim.value * 0.06
+                                : 1.0;
+                            return Transform.scale(
+                              scale: scale,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: selected
+                                      ? [
+                                          BoxShadow(
+                                            color: mood.color.withValues(alpha: glowOpacity),
+                                            blurRadius: 16 + _pulseAnim.value * 8,
+                                            spreadRadius: 2 + _pulseAnim.value * 3,
+                                          ),
+                                        ]
+                                      : [],
+                                ),
+                                child: child,
                               ),
-                              child: child,
-                            ),
-                          );
-                        },
+                            );
+                          },
                         child: KawaiiSurface(
                           gloss: selected ? GlossLevel.full : GlossLevel.subtle,
                           width: 54,
@@ -471,6 +473,7 @@ class _MoodScreenState extends State<MoodScreen>
                             ),
                           ),
                         ),
+                      ),
                       ),
                       const SizedBox(height: 6),
                       Text(
@@ -540,69 +543,79 @@ class _MoodScreenState extends State<MoodScreen>
             const SizedBox(height: KawaiiSpacing.xxl),
 
             // ── Intensity Slider with Orb Visualization ──
-            Row(
-              children: [
-                Text(
-                  'Intensity',
-                  style: kBody(size: 12, weight: FontWeight.w800, color: KawaiiColors.heading),
-                ),
-                const Spacer(),
-                Text(
-                  '${(_intensity * 100).round()}%',
-                  style: kBody(size: 12, weight: FontWeight.w800, color: _selectedMood.color),
-                ),
-              ],
-            ),
-            const SizedBox(height: KawaiiSpacing.sm),
-            KawaiiSlider(
-              value: _intensity,
-              color: _selectedMood.color,
-              onChanged: (v) => setState(() => _intensity = v),
-            ),
-            const SizedBox(height: KawaiiSpacing.lg),
-
-            // ── Intensity Orb ──
-            Center(
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOut,
-                width: 24 + _intensity * 36,
-                height: 24 + _intensity * 36,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      _selectedMood.accent,
-                      _selectedMood.color.withValues(alpha: 0.7),
-                      _selectedMood.color.withValues(alpha: 0.0),
-                    ],
-                    stops: const [0.0, 0.5, 1.0],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: _selectedMood.color.withValues(alpha: 0.15 + _intensity * 0.25),
-                      blurRadius: 12 + _intensity * 20,
-                      spreadRadius: _intensity * 6,
+            ValueListenableBuilder<double>(
+              valueListenable: _intensity,
+              builder: (context, intensity, _) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Intensity',
+                          style: kBody(size: 12, weight: FontWeight.w800, color: KawaiiColors.heading),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${(intensity * 100).round()}%',
+                          style: kBody(size: 12, weight: FontWeight.w800, color: _selectedMood.color),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Center(
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOut,
-                    width: 12 + _intensity * 18,
-                    height: 12 + _intensity * 18,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _selectedMood.accent.withValues(alpha: 0.9),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.6),
-                        width: 1.5,
+                    const SizedBox(height: KawaiiSpacing.sm),
+                    KawaiiSlider(
+                      value: intensity,
+                      color: _selectedMood.color,
+                      onChanged: (v) => _intensity.value = v,
+                    ),
+                    const SizedBox(height: KawaiiSpacing.lg),
+
+                    // ── Intensity Orb ──
+                    Center(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOut,
+                        width: 24 + intensity * 36,
+                        height: 24 + intensity * 36,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: RadialGradient(
+                            colors: [
+                              _selectedMood.accent,
+                              _selectedMood.color.withValues(alpha: 0.7),
+                              _selectedMood.color.withValues(alpha: 0.0),
+                            ],
+                            stops: const [0.0, 0.5, 1.0],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _selectedMood.color.withValues(alpha: 0.15 + intensity * 0.25),
+                              blurRadius: 12 + intensity * 20,
+                              spreadRadius: intensity * 6,
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeOut,
+                            width: 12 + intensity * 18,
+                            height: 12 + intensity * 18,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _selectedMood.accent.withValues(alpha: 0.9),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.6),
+                                width: 1.5,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
+                  ],
+                );
+              },
             ),
             const SizedBox(height: KawaiiSpacing.xl),
 

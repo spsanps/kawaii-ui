@@ -741,7 +741,7 @@ class _GoalCard extends StatelessWidget {
         children: [
           // Golden shimmer for completed goals
           if (goal.completed)
-            Positioned.fill(child: const _GoldenShimmer()),
+            Positioned.fill(child: const RepaintBoundary(child: _GoldenShimmer())),
 
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -750,11 +750,13 @@ class _GoalCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // ── Circular progress ring ──
-                  _AnimatedGoalRing(
-                    progress: goal.progress,
-                    color: goal.color,
-                    size: 60,
-                    completed: goal.completed,
+                  RepaintBoundary(
+                    child: _AnimatedGoalRing(
+                      progress: goal.progress,
+                      color: goal.color,
+                      size: 60,
+                      completed: goal.completed,
+                    ),
                   ),
 
                   const SizedBox(width: KawaiiSpacing.xl),

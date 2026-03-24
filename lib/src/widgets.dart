@@ -584,31 +584,33 @@ class _TypingIndicatorState extends State<TypingIndicator> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: KawaiiSpacing.xl, vertical: 10),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(KawaiiBorderRadius.lg),
-          topRight: Radius.circular(KawaiiBorderRadius.lg),
-          bottomRight: Radius.circular(KawaiiBorderRadius.lg),
-          bottomLeft: Radius.circular(4)),
-        color: widget.color.withValues(alpha: KawaiiOpacity.whisper),
-        border: Border.all(color: widget.color.withValues(alpha: KawaiiOpacity.whisper))),
-      child: Row(mainAxisSize: MainAxisSize.min,
-        children: List.generate(3, (i) => AnimatedBuilder(
-          animation: _ctrl,
-          builder: (context, _) {
-            final t = (_ctrl.value - i * 0.15) % 1.0;
-            double op = 0.2, dy = 0;
-            if (t > 0 && t < 0.3) { op = 0.2 + 0.3 * (t / 0.3); dy = -3 * (t / 0.3); }
-            else if (t >= 0.3 && t < 0.6) { op = 0.5 - 0.3 * ((t - 0.3) / 0.3); dy = -3 + 3 * ((t - 0.3) / 0.3); }
-            return Container(margin: EdgeInsets.only(right: i < 2 ? 4 : 0),
-              child: Transform.translate(offset: Offset(0, dy),
-                child: Opacity(opacity: op,
-                  child: Container(width: 6, height: 6,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: widget.color)))));
-          },
-        ))),
+    return RepaintBoundary(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: KawaiiSpacing.xl, vertical: 10),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(KawaiiBorderRadius.lg),
+            topRight: Radius.circular(KawaiiBorderRadius.lg),
+            bottomRight: Radius.circular(KawaiiBorderRadius.lg),
+            bottomLeft: Radius.circular(4)),
+          color: widget.color.withValues(alpha: KawaiiOpacity.whisper),
+          border: Border.all(color: widget.color.withValues(alpha: KawaiiOpacity.whisper))),
+        child: Row(mainAxisSize: MainAxisSize.min,
+          children: List.generate(3, (i) => AnimatedBuilder(
+            animation: _ctrl,
+            builder: (context, _) {
+              final t = (_ctrl.value - i * 0.15) % 1.0;
+              double op = 0.2, dy = 0;
+              if (t > 0 && t < 0.3) { op = 0.2 + 0.3 * (t / 0.3); dy = -3 * (t / 0.3); }
+              else if (t >= 0.3 && t < 0.6) { op = 0.5 - 0.3 * ((t - 0.3) / 0.3); dy = -3 + 3 * ((t - 0.3) / 0.3); }
+              return Container(margin: EdgeInsets.only(right: i < 2 ? 4 : 0),
+                child: Transform.translate(offset: Offset(0, dy),
+                  child: Opacity(opacity: op,
+                    child: Container(width: 6, height: 6,
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: widget.color)))));
+            },
+          ))),
+      ),
     );
   }
 }

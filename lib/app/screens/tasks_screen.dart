@@ -31,8 +31,7 @@ class TasksScreen extends StatefulWidget {
   State<TasksScreen> createState() => _TasksScreenState();
 }
 
-class _TasksScreenState extends State<TasksScreen>
-    with TickerProviderStateMixin {
+class _TasksScreenState extends State<TasksScreen> {
   int _selectedFilter = 0;
   final Set<String> _recentlyCompleted = {};
 
