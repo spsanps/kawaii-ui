@@ -150,6 +150,44 @@ AnimatedSwitcher(child: pages[index])
 
 // GOOD: library handles it
 KawaiiScaffold(pages: [...], navItems: [...])
+
+// BAD: stagger entrance on every list item (feels sluggish)
+KawaiiEntrance(delay: Duration(milliseconds: 40 * i), child: TaskCard())
+
+// GOOD: items are just there — instant, like the real world
+TaskCard()  // no entrance animation on list items
+
+// BAD: listener inside StatefulBuilder.builder (adds N listeners on N rebuilds)
+StatefulBuilder(builder: (ctx, setState) {
+  controller.addListener(() => setState(() {})); // LEAK!
+})
+
+// GOOD: register listener once, outside the builder
+controller.addListener(() { ... });
+showKawaiiBottomSheet(builder: (_) => StatefulBuilder(...))
+```
+
+## Haptic Principles (enforced by the library)
+
+| Principle | How |
+|-----------|-----|
+| **Tiered by weight** | tick→lightest, click→standard, heavy_click→hero/reward |
+| **Throttled** | <40ms between haptics = skip (prevents spam buzz) |
+| **Native Android API** | Uses `VibrationEffect.createPredefined()` — manufacturer-tuned hardware waveforms, not Flutter's weak `HapticFeedback` |
+| **Single syllable** | One hit per tap, never multi-pulse patterns |
+| **Opt-in** | `playSound: false` silences both audio and haptics |
+
+### Haptic mapping
+
+```
+tick      → EFFECT_TICK        (filter pills, selections)
+toggle    → EFFECT_CLICK       (switches)
+boop      → EFFECT_CLICK       (standard buttons)
+pop       → EFFECT_HEAVY_CLICK (hero buttons)
+send      → EFFECT_CLICK       (messages)
+chime     → EFFECT_CLICK       (arrivals)
+notif     → EFFECT_HEAVY_CLICK (notifications)
+reward    → EFFECT_HEAVY_CLICK (achievements)
 ```
 
 ## Theming
