@@ -2,101 +2,174 @@
 
 A glossy, tactile, kawaii-skeuomorphic Flutter UI library where every element has physical mass, volume, and surface response — like candy, polished toys, or macarons.
 
-## Features
+## Install
 
-### Core Primitives
-- **KawaiiSurface** — glossy shine treatment for any widget (full/medium/subtle gloss)
-- **KawaiiPressable** — instant press + bouncy spring release animation
-- **KawaiiEntrance** — staggered fade + slide entrance animations
-
-### Theming
-- **KawaiiTheme** — InheritedWidget with `KawaiiTheme.of(context)`
-- 5 built-in palettes: Sakura, Ocean, Forest, Lavender, Sunset
-- Design tokens: spacing, border radii, shadows, opacity, curves
-
-### Widgets
-| Widget | Description |
-|--------|-------------|
-| `KawaiiButton` | Glossy button with 5 color presets, hero/small variants |
-| `KawaiiCard` | Glass panel with inner bevel + optional corner sparkles |
-| `KawaiiBadge` | Glossy circle icon container |
-| `KawaiiTag` | Label chip with subtle shine |
-| `KawaiiAvatar` | Circle avatar with status indicator |
-| `KawaiiStat` | Animated counter pill |
-| `KawaiiProgress` | Animated fill bar with gloss |
-| `KawaiiCircularProgress` | Animated circular progress ring |
-| `KawaiiToggle` | Switch with glossy knob |
-| `KawaiiInput` | Text field with embedded action button |
-| `KawaiiTextField` | Simple glass text input (no button) |
-| `KawaiiCheckbox` | Rounded square with animated check |
-| `KawaiiRadio<T>` | Circular radio with spring-animated dot |
-| `KawaiiSlider` | Glossy track + draggable thumb |
-| `KawaiiChip` | Selectable/deletable chip with avatar |
-| `KawaiiNotification` | Pressable notification row |
-| `KawaiiListTile` | Leading/title/subtitle/trailing list item |
-| `KawaiiDivider` | Soft gradient divider |
-| `KawaiiSparkleField` | Ambient animated background sparkles |
-
-### App Shell
-- `KawaiiScaffold` — gradient background + sparkle field + safe area
-- `KawaiiAppBar` — frosted glass app bar
-- `KawaiiBottomNavBar` — glossy bottom nav with animated pill indicator
-- `KawaiiTabBar` — sliding glossy pill tab selector
-
-### Overlays
-- `showKawaiiDialog()` — centered modal with scale+fade entrance
-- `showKawaiiBottomSheet()` — slide-up glass panel with drag handle
-- `showKawaiiSnackbar()` — floating toast (success/error/info/warning)
-
-### Sound & Haptics
-- 8 synthesized UI sounds (boop, pop, tick, toggle, chime, send, notif, reward)
-- Single-syllable sound design — clean, minimal haptic clicks
-- All widgets support `playSound: false` to prevent stacking
-
-### Icons
-- 13 hand-drawn CustomPainter icons (Heart, Dress, Dumbbell, Moon, Pen, MusicNote, Search, ChatBubble, Bell, Send, Check, Arrow, PlayTriangle, Star4)
-- `SparkleWidget` — animated pulsing sparkle
+```yaml
+dependencies:
+  kawaii_ui:
+    git:
+      url: https://github.com/spsanps/kawaii-ui.git
+```
 
 ## Quick Start
 
 ```dart
 import 'package:kawaii_ui/kawaii_ui.dart';
 
-// Basic button
+// Multi-page app with bottom nav (instant tab switching, pages kept alive)
+KawaiiScaffold(
+  pages: [HomePage(), TasksPage(), MoodPage()],
+  navItems: [
+    KawaiiNavItem(icon: myIcon, label: 'Home'),
+    KawaiiNavItem(icon: myIcon, label: 'Tasks', badge: 3),
+    KawaiiNavItem(icon: myIcon, label: 'Mood'),
+  ],
+)
+
+// Glossy button
 KawaiiButton.pink('Hello', onTap: () {});
 
-// Glossy card
+// Card with glass panel
 KawaiiCard(child: Text('Content'));
 
-// Circular progress
-KawaiiCircularProgress(progress: 0.75, color: Color(0xFFF06292));
+// Always-lazy list (prevents eager build perf issues)
+KawaiiListView(
+  itemCount: items.length,
+  itemBuilder: (ctx, i) => KawaiiListTile(title: items[i].name),
+  header: [SectionLabel('My Items')],
+  staggerEntrance: true,
+);
 
-// Dialog
-showKawaiiDialog(
-  context: context,
-  title: 'Hello!',
-  content: Text('Kawaii dialog'),
-  actions: [KawaiiButton.pink('OK', onTap: () => Navigator.pop(context))],
+// Instant inline form (no modal sheet delay)
+KawaiiExpandableForm(
+  buttonLabel: 'Add Item',
+  formBuilder: (context, collapse) => Column(children: [
+    KawaiiTextField(placeholder: 'Name'),
+    KawaiiButton.pink('Save', onTap: () { save(); collapse(); }),
+  ]),
 );
 ```
 
-## Example App
+## Widgets
 
-The `lib/app/` directory contains **Kawaii Life** — a fully functional todo, mood journal, and goals tracker app that showcases every widget in the library.
+### Core Primitives
+| Widget | Description |
+|--------|-------------|
+| `KawaiiSurface` | Glossy shine treatment — the atom of the design system |
+| `KawaiiPressable` | Instant press + bouncy spring release |
+| `KawaiiEntrance` | Staggered fade + slide entrance |
 
-Run it:
-```bash
-flutter run
-```
+### App Shell
+| Widget | Description |
+|--------|-------------|
+| `KawaiiScaffold` | Gradient bg + sparkles + multi-page nav (IndexedStack) |
+| `KawaiiAppBar` | Frosted glass app bar |
+| `KawaiiBottomNavBar` | Glossy bottom nav with animated pill indicator |
+| `KawaiiTabBar` | Sliding glossy pill tab selector |
+
+### Content
+| Widget | Description |
+|--------|-------------|
+| `KawaiiButton` | 5 color presets, hero/small variants |
+| `KawaiiCard` | Glass panel with inner bevel + optional sparkles |
+| `KawaiiBadge` | Glossy circle icon container |
+| `KawaiiTag` | Label chip with subtle shine |
+| `KawaiiAvatar` | Circle avatar with status indicator |
+| `KawaiiStat` | Animated counter pill |
+| `KawaiiProgress` | Animated fill bar with gloss |
+| `KawaiiCircularProgress` | Animated circular ring |
+| `KawaiiListTile` | Leading/title/subtitle/trailing list item |
+| `KawaiiDivider` | Soft gradient divider |
+| `KawaiiListView` | Always-lazy list with optional stagger entrance |
+| `KawaiiNotification` | Pressable notification row |
+| `KawaiiSparkleField` | Ambient animated background sparkles |
+
+### Form Controls
+| Widget | Description |
+|--------|-------------|
+| `KawaiiToggle` | Switch with glossy knob |
+| `KawaiiInput` | Text field with embedded action button |
+| `KawaiiTextField` | Simple glass text input (no button) |
+| `KawaiiCheckbox` | Rounded square with animated check |
+| `KawaiiRadio<T>` | Circular with spring-animated dot |
+| `KawaiiSlider` | Glossy track + draggable thumb |
+| `KawaiiChip` | Selectable/deletable chip |
+| `KawaiiExpandableForm` | Instant inline form (replaces modal sheets) |
+
+### Overlays
+| Widget | Description |
+|--------|-------------|
+| `showKawaiiDialog()` | Centered modal (use for confirmations) |
+| `showKawaiiBottomSheet()` | Slide-up panel (use for complex multi-step flows) |
+| `showKawaiiSnackbar()` | Floating toast (success/error/info/warning) |
 
 ## Design Principles
 
 1. **Every surface has gloss** — top-lit shine gradient on all interactive elements
 2. **Everything is pressable** — instant press (0ms) + bouncy spring release (200ms)
 3. **Single-syllable feedback** — one clean haptic click per action, never multi-buzz
-4. **Tokens over magic numbers** — spacing, radii, shadows, opacity all from the token system
-5. **Sound is opt-in** — all widgets accept `playSound: false` to prevent stacking
-6. **Decorative elements are behind content** — sparkles and bevel borders never interfere with interactions
+4. **Tokens over magic numbers** — spacing, radii, shadows, opacity from the token system
+5. **Sound is opt-in** — `playSound: false` on all widgets prevents stacking
+
+## Performance Principles (enforced by the library)
+
+| Principle | How the library enforces it |
+|-----------|---------------------------|
+| **Lazy lists** | `KawaiiListView` — always uses `ListView.builder`, impossible to build eagerly |
+| **No tab rebuild lag** | `KawaiiScaffold(pages:)` — uses IndexedStack, pages kept alive |
+| **No modal delay** | `KawaiiExpandableForm` — inline form, no 250ms sheet animation |
+| **No keyboard lag** | `showKawaiiBottomSheet` handles insets natively — don't add `MediaQuery.viewInsets` in your builder |
+| **Isolated animations** | All continuous-animation widgets self-wrap in `RepaintBoundary` |
+| **Cached text styles** | `kHeading()`/`kBody()` use pre-cached base styles, not `GoogleFonts` per build |
+| **Circular clipping** | `KawaiiSurface` auto-detects `BoxShape.circle` → uses `ClipOval` |
+| **No decorator conflicts** | `KawaiiCard` sparkles/bevel sit behind content with `IgnorePointer` |
+
+### Anti-patterns to avoid
+
+```dart
+// BAD: eager list
+ListView(children: items.map((i) => Widget(i)).toList())
+
+// GOOD: lazy list
+KawaiiListView(itemCount: items.length, itemBuilder: (ctx, i) => Widget(items[i]))
+
+// BAD: modal sheet for simple input (250ms delay)
+showKawaiiBottomSheet(builder: (_) => TextField())
+
+// GOOD: inline form (instant)
+KawaiiExpandableForm(formBuilder: (ctx, collapse) => TextField())
+
+// BAD: MediaQuery.of(ctx).viewInsets in sheet builder (rebuilds ~30x)
+Padding(padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom))
+
+// GOOD: let the library handle keyboard insets (already built-in)
+showKawaiiBottomSheet(builder: (_) => MyContent())
+
+// BAD: AnimatedSwitcher for page tabs (destroys/rebuilds pages)
+AnimatedSwitcher(child: pages[index])
+
+// GOOD: library handles it
+KawaiiScaffold(pages: [...], navItems: [...])
+```
+
+## Theming
+
+5 built-in palettes: `sakura` (pink), `ocean` (blue), `forest` (green), `lavender` (purple), `sunset` (orange).
+
+```dart
+KawaiiTheme(
+  data: KawaiiThemeData.ocean(),
+  child: MyApp(),
+)
+```
+
+## Example App
+
+`lib/app/` contains **Kawaii Life** — a todo, mood journal, and goals tracker showcasing every widget.
+
+```bash
+flutter run
+```
 
 ## License
 
