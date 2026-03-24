@@ -631,7 +631,7 @@ class KawaiiInput extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(KawaiiBorderRadius.lg),
         gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
-          colors: [Color(0xF5FFFFFF), Color(0xEAFFF8FC)]),
+          colors: [Color(0xBFFFFFFF), Color(0x8CFFF8FC)]),
         border: Border.all(color: color, width: KawaiiBorderWidth.medium),
         boxShadow: [KawaiiShadows.medium(color)]),
       child: Row(children: [
@@ -676,7 +676,7 @@ class KawaiiTextField extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(KawaiiBorderRadius.lg),
         gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
-          colors: [Color(0xF5FFFFFF), Color(0xEAFFF8FC)]),
+          colors: [Color(0xBFFFFFFF), Color(0x8CFFF8FC)]),
         border: Border.all(color: color, width: KawaiiBorderWidth.medium),
         boxShadow: [KawaiiShadows.medium(color)]),
       child: TextField(
@@ -719,7 +719,7 @@ class KawaiiNotification extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(KawaiiBorderRadius.lg),
             gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
-              colors: [Color(0xF2FFFFFF), Color(0xE6FFF8FC)]),
+              colors: [Color(0xA6FFFFFF), Color(0x73FFF8FC)]),
             border: Border.all(color: color.withValues(alpha: KawaiiOpacity.hint), width: KawaiiBorderWidth.light),
             boxShadow: [BoxShadow(color: color.withValues(alpha: KawaiiOpacity.ghost),
               blurRadius: 8, offset: const Offset(0, 3))]),

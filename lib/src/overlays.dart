@@ -20,7 +20,7 @@ Future<T?> showKawaiiDialog<T>({
     context: context,
     barrierDismissible: true,
     barrierLabel: 'Dismiss',
-    barrierColor: const Color(0x40B4648C),
+    barrierColor: const Color(0x80B4648C),
     transitionDuration: const Duration(milliseconds: 300),
     transitionBuilder: (ctx, anim, secondaryAnim, child) {
       final curved = CurvedAnimation(parent: anim, curve: KawaiiCurves.spring);
@@ -124,7 +124,7 @@ Future<T?> showKawaiiBottomSheet<T>({
   return showModalBottomSheet<T>(
     context: context,
     backgroundColor: Colors.transparent,
-    barrierColor: const Color(0x40B4648C),
+    barrierColor: const Color(0x80B4648C),
     isScrollControlled: true,
     builder: (ctx) => Container(
       decoration: const BoxDecoration(
@@ -268,7 +268,7 @@ class _KawaiiSnackbarWidgetState extends State<_KawaiiSnackbarWidget>
               borderRadius: BorderRadius.circular(KawaiiBorderRadius.lg),
               gradient: const LinearGradient(
                 begin: Alignment.topCenter, end: Alignment.bottomCenter,
-                colors: [Color(0xF2FFFFFF), Color(0xE6FFF8FC)],
+                colors: [Color(0xA6FFFFFF), Color(0x73FFF8FC)],
               ),
               border: Border.all(color: color.withValues(alpha: KawaiiOpacity.hint), width: KawaiiBorderWidth.light),
               boxShadow: [BoxShadow(color: color.withValues(alpha: KawaiiOpacity.ghost),

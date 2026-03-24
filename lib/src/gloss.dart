@@ -66,9 +66,8 @@ class KawaiiSurface extends StatelessWidget {
   final double? shineOpacity;
   final double shineHeight;
 
-  /// When true (default), the surface responds to touch with a subtle
-  /// bounce even without an explicit onTap. This makes every glossy
-  /// element feel physically pressable.
+  /// When true, the surface responds to touch with a subtle bounce
+  /// even without an explicit onTap. Off by default for performance.
   final bool tactile;
 
   /// Optional tap callback. When provided, the surface plays a haptic
@@ -85,7 +84,7 @@ class KawaiiSurface extends StatelessWidget {
     this.width,
     this.shineOpacity,
     this.shineHeight = 0.36,
-    this.tactile = true,
+    this.tactile = false,
     this.onTap,
   });
 
