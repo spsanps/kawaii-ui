@@ -773,7 +773,7 @@ class _MoodScreenState extends State<MoodScreen>
     // Take the last 7 entries (or fewer if not enough)
     final recent = entries.take(7).toList().reversed.toList();
 
-    return KawaiiSurface(
+    return KawaiiSurface(tactile: false,
       gloss: GlossLevel.subtle,
       shineOpacity: 0.20,
       shineHeight: 0.36,
@@ -830,7 +830,7 @@ class _MoodScreenState extends State<MoodScreen>
 
     return Padding(
       padding: const EdgeInsets.only(bottom: KawaiiSpacing.md),
-      child: KawaiiSurface(
+      child: KawaiiSurface(tactile: false,
         gloss: GlossLevel.subtle,
         shineOpacity: 0.30,
         shineHeight: 0.38,

@@ -925,7 +925,7 @@ class _SwipeableTaskCardState extends State<_SwipeableTaskCard> {
       child: RepaintBoundary(
           child: Stack(
             children: [
-              KawaiiSurface(
+              KawaiiSurface(tactile: false,
                 gloss: GlossLevel.subtle,
                 shineOpacity: 0.30,
                 shineHeight: 0.38,

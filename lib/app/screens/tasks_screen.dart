@@ -593,7 +593,7 @@ class _ProgressHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pct = total > 0 ? done.toDouble() / total : 0.0;
-    return KawaiiSurface(
+    return KawaiiSurface(tactile: false,
       gloss: GlossLevel.subtle,
       shineOpacity: 0.30,
       shineHeight: 0.40,
