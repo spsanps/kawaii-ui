@@ -129,7 +129,7 @@ class DumbbellPainter extends CustomPainter {
       oldDelegate.fill != fill || oldDelegate.stroke != stroke;
 }
 
-/// Moon icon
+/// Moon icon — centered crescent, clear at small sizes
 class MoonPainter extends CustomPainter {
   final Color fill;
   final Color stroke;
@@ -138,15 +138,23 @@ class MoonPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final w = size.width, h = size.height;
+    final cx = w * 0.5, cy = h * 0.5;
+    final r = w * 0.4;
+
+    // Crescent: outer circle minus inner circle offset to the right
     final path = Path()
-      ..moveTo(w * 0.7, h * 0.15)
-      ..arcToPoint(Offset(w * 0.7, h * 0.85), radius: Radius.circular(w * 0.38), clockwise: false)
-      ..arcToPoint(Offset(w * 0.7, h * 0.15), radius: Radius.circular(w * 0.28), clockwise: true);
-    canvas.drawPath(path, Paint()..color = fill);
-    canvas.drawPath(path, Paint()..color = stroke..style = PaintingStyle.stroke..strokeWidth = 2.5
-      ..strokeJoin = StrokeJoin.round);
-    canvas.drawCircle(Offset(w * 0.62, h * 0.28), 2.5, Paint()..color = stroke);
-    canvas.drawCircle(Offset(w * 0.74, h * 0.42), 1.8, Paint()..color = stroke);
+      ..addOval(Rect.fromCircle(center: Offset(cx, cy), radius: r));
+    final cutout = Path()
+      ..addOval(Rect.fromCircle(center: Offset(cx + r * 0.55, cy - r * 0.1), radius: r * 0.75));
+    final crescent = Path.combine(PathOperation.difference, path, cutout);
+
+    canvas.drawPath(crescent, Paint()..color = fill);
+    canvas.drawPath(crescent, Paint()..color = stroke..style = PaintingStyle.stroke
+      ..strokeWidth = (w * 0.1).clamp(1.5, 2.5)..strokeJoin = StrokeJoin.round);
+
+    // Small star dot
+    final dotR = (w * 0.04).clamp(1.0, 2.0);
+    canvas.drawCircle(Offset(cx + r * 0.6, cy - r * 0.5), dotR, Paint()..color = stroke);
   }
 
   @override
