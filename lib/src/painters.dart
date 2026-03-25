@@ -154,6 +154,40 @@ class MoonPainter extends CustomPainter {
       oldDelegate.fill != fill || oldDelegate.stroke != stroke;
 }
 
+/// Smiley face icon — clear at any size, perfect for "mood" tab
+class SmileyPainter extends CustomPainter {
+  final Color color;
+  const SmileyPainter({this.color = const Color(0xFFF06292)});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width, h = size.height;
+    final cx = w / 2, cy = h / 2, r = w * 0.42;
+    final paint = Paint()..color = color..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5..strokeCap = StrokeCap.round;
+
+    // Face circle
+    canvas.drawCircle(Offset(cx, cy), r, paint);
+
+    // Eyes — two small filled dots
+    final eyeY = cy - r * 0.15;
+    final eyeR = w * 0.06;
+    canvas.drawCircle(Offset(cx - r * 0.35, eyeY), eyeR, Paint()..color = color);
+    canvas.drawCircle(Offset(cx + r * 0.35, eyeY), eyeR, Paint()..color = color);
+
+    // Smile — arc
+    final smileRect = Rect.fromCenter(
+      center: Offset(cx, cy + r * 0.1),
+      width: r * 1.0,
+      height: r * 0.8,
+    );
+    canvas.drawArc(smileRect, 0.2, 2.7, false, paint..strokeWidth = 2.0);
+  }
+
+  @override
+  bool shouldRepaint(SmileyPainter oldDelegate) => oldDelegate.color != color;
+}
+
 /// Pen/pencil icon
 class PenPainter extends CustomPainter {
   final Color stroke;

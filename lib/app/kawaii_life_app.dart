@@ -71,7 +71,7 @@ class _KawaiiLifeHomeState extends State<KawaiiLifeHome> {
               icon: kawaiiIcon(const CheckPainter(color: KawaiiColors.pinkBottom), size: 22),
               label: 'Tasks',
               badge: incompleteTasks > 0 ? incompleteTasks : null),
-            KawaiiNavItem(icon: kawaiiIcon(const MoonPainter(), size: 22), label: 'Mood'),
+            KawaiiNavItem(icon: kawaiiIcon(const SmileyPainter(), size: 22), label: 'Mood'),
             KawaiiNavItem(icon: kawaiiIcon(const Star4Painter(), size: 22), label: 'Goals'),
           ],
         );
