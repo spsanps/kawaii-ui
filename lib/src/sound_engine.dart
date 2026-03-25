@@ -130,8 +130,8 @@ class KawaiiSoundEngine {
         layers = [_hollow(_vary(800), 0.04, 0.14, 10, 0)];
       case KawaiiSound.chime:  // positive arrival — warm single tone
         layers = [_hollow(_vary(550), 0.1, 0.1, 3, 0), _ping(_vary(1100), 0.08, 0.06, 0.005)];
-      case KawaiiSound.send:   // message sent — single upward shimmer
-        layers = [_hollow(_vary(700), 0.08, 0.15, 5, 0), _ping(_vary(1400), 0.06, 0.04, 0.008)];
+      case KawaiiSound.send:   // message sent — upward shimmer (matches JSX: 700+1400+2100)
+        layers = [_hollow(_vary(700), 0.1, 0.15, 5, 0), _ping(_vary(1400), 0.16, 0.06, 0.008), _ping(_vary(2100), 0.1, 0.03, 0.02)];
       case KawaiiSound.notif:  // notification — single bright ping
         layers = [_hollow(_vary(660), 0.08, 0.12, 4, 0), _ping(_vary(1320), 0.06, 0.05, 0.005)];
       case KawaiiSound.reward: // reward — single warm tone, slightly longer
