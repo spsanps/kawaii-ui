@@ -18,16 +18,16 @@ Widget kawaiiIcon(CustomPainter painter, {double size = 16}) =>
 // map lookup per-frame adds up with dozens of text widgets.
 
 final TextStyle _fredokaBase = GoogleFonts.fredoka(
-    fontWeight: FontWeight.w700, color: KawaiiColors.heading);
+    fontWeight: FontWeight.w600, color: KawaiiColors.heading);
 final TextStyle _nunitoBase = GoogleFonts.nunito(
-    fontWeight: FontWeight.w700, color: KawaiiColors.body);
+    fontWeight: FontWeight.w600, color: KawaiiColors.body);
 
-/// Heading font (Fredoka — display only)
+/// Heading font (Fredoka — display, semibold not bold so surfaces shine through)
 TextStyle kHeading({double size = 14, Color? color}) => _fredokaBase.copyWith(
     fontSize: size, color: color);
 
-/// Body font (Nunito — everything else)
-TextStyle kBody({double size = 13, FontWeight weight = FontWeight.w700, Color? color}) =>
+/// Body font (Nunito — semibold default, use w800 only for tiny labels)
+TextStyle kBody({double size = 13, FontWeight weight = FontWeight.w600, Color? color}) =>
     _nunitoBase.copyWith(fontSize: size, fontWeight: weight, color: color);
 
 /// Small sparkle icon
