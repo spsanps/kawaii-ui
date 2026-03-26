@@ -864,16 +864,12 @@ class _TaskCardEntry extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           opacity: isDone ? 0.55 : 1.0,
           child: KawaiiListTile(
+            dense: true,
             leading: KawaiiCheckbox(
               value: isDone,
               color: task.category.color,
               onChanged: (_) => onToggle(task)),
-            title: Text(task.title,
-              style: kBody(size: 13, weight: FontWeight.w700,
-                color: isDone ? KawaiiColors.muted : KawaiiColors.heading,
-              ).copyWith(
-                decoration: isDone ? TextDecoration.lineThrough : null,
-                decorationColor: KawaiiColors.muted)),
+            title: task.title,
             trailing: KawaiiTag(task.category.label, color: task.category.color),
           ),
         ),
