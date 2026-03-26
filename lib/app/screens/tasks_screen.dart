@@ -347,15 +347,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return KawaiiScaffold(
-      appBar: KawaiiAppBar(
-        title: Row(mainAxisSize: MainAxisSize.min, children: [
-          kawaiiIcon(CheckPainter(color: KawaiiColors.heading), size: 20),
-          const SizedBox(width: KawaiiSpacing.md),
-          const Text('Tasks'),
-        ]),
-      ),
-      body: ListenableBuilder(
+    return ListenableBuilder(
         listenable: widget.store,
         builder: (context, _) {
           final filtered =
@@ -366,7 +358,18 @@ class _TasksScreenState extends State<TasksScreen> {
           final doneAll = widget.store.tasksCompleted;
 
           return Column(children: [
-            // ── Animated header with progress arc ──
+            // ── Inline header (matches Home/Mood style) ──
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                KawaiiSpacing.xl, KawaiiSpacing.lg, KawaiiSpacing.xl, KawaiiSpacing.lg),
+              child: Row(children: [
+                kawaiiIcon(const CheckPainter(color: KawaiiColors.heading), size: 20),
+                const SizedBox(width: KawaiiSpacing.md),
+                Text('Tasks', style: kHeading(size: 22)),
+              ]),
+            ),
+
+            // ── Progress summary ──
             Padding(
               padding: const EdgeInsets.fromLTRB(
                   KawaiiSpacing.xl, KawaiiSpacing.md,
@@ -504,7 +507,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 ? Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: KawaiiSpacing.xl, vertical: KawaiiSpacing.md),
-                    child: KawaiiCard(showSparkles: false, child: Column(
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         KawaiiTextField(
@@ -549,7 +552,7 @@ class _TasksScreenState extends State<TasksScreen> {
                           }),
                         ]),
                       ],
-                    )),
+                    ),
                   )
                 : Padding(
                     padding: const EdgeInsets.only(
@@ -561,7 +564,6 @@ class _TasksScreenState extends State<TasksScreen> {
             ),
           ]);
         },
-      ),
     );
   }
 }
