@@ -505,11 +505,13 @@ class _TasksScreenState extends State<TasksScreen> {
 
             // ── Floating button — just the pill, transparent around it ──
             if (!_showingAddForm)
-              Positioned(
-                bottom: 16, left: 0, right: 0,
-                child: Center(child: KawaiiButton.pink('Add New Task', hero: true,
-                  i: kawaiiIcon(const Star4Painter(), size: 16),
-                  onTap: () => setState(() => _showingAddForm = true)))),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: KawaiiButton.pink('Add New Task', hero: true,
+                    i: kawaiiIcon(const Star4Painter(), size: 16),
+                    onTap: () => setState(() => _showingAddForm = true)))),
 
             // ── Floating form (expands from bottom) ──
             if (_showingAddForm)
