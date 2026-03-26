@@ -357,9 +357,7 @@ class _TasksScreenState extends State<TasksScreen> {
           final totalAll = widget.store.tasksTotal;
           final doneAll = widget.store.tasksCompleted;
 
-          return Stack(children: [
-            // ── Content ──
-            Column(children: [
+          return Column(children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 KawaiiSpacing.xl, KawaiiSpacing.lg, KawaiiSpacing.xl, KawaiiSpacing.lg),
@@ -500,32 +498,16 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
             ),
 
-            // No spacer — button floats over content
-          ]),
-
-            // ── Floating button — just the pill, transparent around it ──
-            if (!_showingAddForm)
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: KawaiiButton.pink('Add New Task', hero: true,
-                    i: kawaiiIcon(const Star4Painter(), size: 16),
-                    onTap: () => setState(() => _showingAddForm = true)))),
-
-            // ── Floating form (expands from bottom) ──
-            if (_showingAddForm)
-              Positioned(
-                bottom: 16, left: KawaiiSpacing.xl, right: KawaiiSpacing.xl,
-                child: KawaiiCard(showSparkles: false, child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(children: [
-                      Expanded(child: KawaiiTextField(
-                        placeholder: 'What needs doing?',
-                        controller: _addTitleCtrl,
-                        color: _addCategory.color)),
-                    ]),
+            // ── Bottom add section ──
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                KawaiiSpacing.xl, KawaiiSpacing.xl, KawaiiSpacing.xl, KawaiiSpacing.xxl),
+              child: _showingAddForm
+                ? Column(mainAxisSize: MainAxisSize.min, children: [
+                    KawaiiTextField(
+                      placeholder: 'What needs doing?',
+                      controller: _addTitleCtrl,
+                      color: _addCategory.color),
                     const SizedBox(height: KawaiiSpacing.md),
                     Wrap(spacing: 6, runSpacing: 6, children: TaskCategory.values.map((cat) {
                       final sel = cat == _addCategory;
@@ -556,8 +538,11 @@ class _TasksScreenState extends State<TasksScreen> {
                         setState(() => _showingAddForm = false);
                       }),
                     ]),
-                  ],
-                ))),
+                  ])
+                : Center(child: KawaiiButton.pink('Add New Task', hero: true,
+                    i: kawaiiIcon(const Star4Painter(), size: 16),
+                    onTap: () => setState(() => _showingAddForm = true))),
+            ),
           ]);
         },
     );
