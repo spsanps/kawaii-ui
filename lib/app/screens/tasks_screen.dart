@@ -34,13 +34,9 @@ class TasksScreen extends StatefulWidget {
 class _TasksScreenState extends State<TasksScreen> {
   int _selectedFilter = 0;
   final Set<String> _recentlyCompleted = {};
-  bool _showingAddForm = false;
-  final _addTitleCtrl = TextEditingController();
-  TaskCategory _addCategory = TaskCategory.personal;
 
   @override
   void dispose() {
-    _addTitleCtrl.dispose();
     super.dispose();
   }
 
@@ -347,25 +343,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      floatingActionButton: _showingAddForm ? null : KawaiiPressable(
-        sound: KawaiiSound.pop,
-        onTap: () => setState(() => _showingAddForm = true),
-        child: Container(
-          width: 56, height: 56,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter, end: Alignment.bottomCenter,
-              colors: [KawaiiColors.pinkTop, KawaiiColors.pinkBottom]),
-            border: Border.all(color: KawaiiColors.pinkStroke, width: KawaiiBorderWidth.thick),
-            boxShadow: [KawaiiShadows.deep(KawaiiColors.pinkStroke)]),
-          child: const Center(child: Text('+', style: TextStyle(
-            fontSize: 28, fontWeight: FontWeight.w400, color: Colors.white, height: 1))),
-        ),
-      ),
-      body: ListenableBuilder(
+    return ListenableBuilder(
         listenable: widget.store,
         builder: (context, _) {
           final filtered =
@@ -383,6 +361,8 @@ class _TasksScreenState extends State<TasksScreen> {
                 kawaiiIcon(const CheckPainter(color: KawaiiColors.heading), size: 20),
                 const SizedBox(width: KawaiiSpacing.md),
                 Text('Tasks', style: kHeading(size: 22)),
+                const Spacer(),
+                KawaiiButton.pink('+ New', small: true, onTap: _showAddDialog),
               ]),
             ),
 
@@ -516,51 +496,49 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
             ),
 
-            // ── Add form (inline, shown when FAB tapped) ──
-            if (_showingAddForm)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  KawaiiSpacing.xl, KawaiiSpacing.md, KawaiiSpacing.xl, KawaiiSpacing.xxl),
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  KawaiiTextField(
-                    placeholder: 'What needs doing?',
-                    controller: _addTitleCtrl,
-                    color: _addCategory.color),
-                  const SizedBox(height: KawaiiSpacing.md),
-                  Wrap(spacing: 6, runSpacing: 6, children: TaskCategory.values.map((cat) {
-                    final sel = cat == _addCategory;
-                    return KawaiiPressable(pressScale: 0.92, pressTranslateY: 2,
-                      onTap: () => setState(() => _addCategory = cat),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(KawaiiBorderRadius.md),
-                          gradient: sel ? LinearGradient(colors: [cat.accent, cat.color]) : null,
-                          color: sel ? null : cat.color.withValues(alpha: KawaiiOpacity.whisper),
-                          border: Border.all(color: cat.color.withValues(alpha: sel ? 0.5 : 0.15))),
-                        child: Text(cat.label, style: kBody(size: 11, weight: FontWeight.w800,
-                          color: sel ? Colors.white : cat.color))));
-                  }).toList()),
-                  const SizedBox(height: KawaiiSpacing.md),
-                  Row(children: [
-                    Expanded(child: KawaiiButton.pink('Add', onTap: () {
-                      final title = _addTitleCtrl.text.trim();
-                      if (title.isEmpty) return;
-                      widget.store.addTask(title, _addCategory);
-                      _addTitleCtrl.clear();
-                      setState(() => _showingAddForm = false);
-                    })),
-                    const SizedBox(width: KawaiiSpacing.md),
-                    KawaiiButton.green('Cancel', small: true, onTap: () {
-                      _addTitleCtrl.clear();
-                      setState(() => _showingAddForm = false);
-                    }),
-                  ]),
-                ]),
-              ),
           ]);
         },
-    ));
+    );
+  }
+
+  void _showAddDialog() {
+    var selectedCat = TaskCategory.personal;
+    final titleCtrl = TextEditingController();
+    showKawaiiDialog(
+      context: context,
+      title: 'New Task',
+      content: StatefulBuilder(
+        builder: (ctx, setDialogState) => Column(mainAxisSize: MainAxisSize.min, children: [
+          KawaiiTextField(
+            placeholder: 'What needs doing?',
+            controller: titleCtrl),
+          const SizedBox(height: KawaiiSpacing.lg),
+          Wrap(spacing: 6, runSpacing: 6, children: TaskCategory.values.map((cat) {
+            final sel = cat == selectedCat;
+            return KawaiiPressable(pressScale: 0.92, pressTranslateY: 2,
+              onTap: () => setDialogState(() => selectedCat = cat),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(KawaiiBorderRadius.md),
+                  gradient: sel ? LinearGradient(colors: [cat.accent, cat.color]) : null,
+                  color: sel ? null : cat.color.withValues(alpha: KawaiiOpacity.whisper),
+                  border: Border.all(color: cat.color.withValues(alpha: sel ? 0.5 : 0.15))),
+                child: Text(cat.label, style: kBody(size: 11, weight: FontWeight.w800,
+                  color: sel ? Colors.white : cat.color))));
+          }).toList()),
+        ])),
+      actions: [
+        KawaiiButton.green('Cancel', small: true,
+          onTap: () => Navigator.pop(context)),
+        KawaiiButton.pink('Add', onTap: () {
+          final title = titleCtrl.text.trim();
+          if (title.isEmpty) return;
+          widget.store.addTask(title, selectedCat);
+          Navigator.pop(context);
+        }),
+      ],
+    ).whenComplete(() => titleCtrl.dispose());
   }
 }
 
