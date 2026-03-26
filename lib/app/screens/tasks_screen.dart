@@ -996,10 +996,10 @@ class _TaskCard extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             // Card body
-            // Kawaii task pill — tinted by category, glossy, no left stripe
+            // Clean white glossy pill — color comes from checkbox + tag only
             KawaiiSurface(tactile: false,
               gloss: isDone ? GlossLevel.subtle : GlossLevel.medium,
-              shineOpacity: isDone ? 0.15 : 0.30,
+              shineOpacity: isDone ? 0.12 : 0.25,
               shineHeight: 0.36,
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               decoration: BoxDecoration(
@@ -1007,14 +1007,14 @@ class _TaskCard extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter, end: Alignment.bottomCenter,
                   colors: [
-                    catColor.withValues(alpha: isDone ? 0.06 : 0.12),
-                    catColor.withValues(alpha: isDone ? 0.02 : 0.05),
+                    const Color(0xFFFFFFFE).withValues(alpha: isDone ? 0.7 : 0.95),
+                    const Color(0xFFFFF8FC).withValues(alpha: isDone ? 0.5 : 0.85),
                   ]),
                 border: Border.all(
-                  color: catColor.withValues(alpha: isDone ? 0.06 : 0.14),
+                  color: KawaiiColors.cardBorder.withValues(alpha: isDone ? 0.08 : 0.18),
                   width: KawaiiBorderWidth.light),
                 boxShadow: [BoxShadow(
-                  color: catColor.withValues(alpha: isDone ? 0.02 : 0.06),
+                  color: KawaiiColors.glass.withValues(alpha: isDone ? 0.02 : 0.06),
                   blurRadius: 10, offset: const Offset(0, 3))],
               ),
               child: Row(

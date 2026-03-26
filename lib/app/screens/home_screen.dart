@@ -847,7 +847,6 @@ class _TasksSection extends StatelessWidget {
             ),
           )
         else ...[
-          // Build task cards lazily
           ...List.generate(tasks.length, (i) {
             final task = tasks[i];
             return Padding(
@@ -856,9 +855,15 @@ class _TasksSection extends StatelessWidget {
                 right: KawaiiSpacing.page,
                 bottom: KawaiiSpacing.md,
               ),
-              child: _SwipeableTaskCard(
-                task: task,
-                onComplete: () => store.toggleTask(task.id),
+              child: KawaiiListTile(
+                leading: KawaiiCheckbox(
+                  value: task.done,
+                  color: task.category.color,
+                  onChanged: (_) => store.toggleTask(task.id),
+                ),
+                title: task.title,
+                trailing: KawaiiTag(task.category.label, color: task.category.color),
+                dense: true,
               ),
             );
           }),
