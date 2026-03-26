@@ -137,6 +137,28 @@ class MoodEntry {
   }
 }
 
+// ━━━ DIARY ━━━
+class DiaryEntry {
+  final String id;
+  final String text;
+  final DateTime date;
+  final String? linkedMoodId;
+
+  const DiaryEntry({
+    required this.id,
+    required this.text,
+    required this.date,
+    this.linkedMoodId,
+  });
+
+  DiaryEntry copyWith({String? text, String? linkedMoodId}) => DiaryEntry(
+    id: id,
+    text: text ?? this.text,
+    date: date,
+    linkedMoodId: linkedMoodId ?? this.linkedMoodId,
+  );
+}
+
 // ━━━ GOAL ━━━
 class Goal {
   final String id;

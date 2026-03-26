@@ -115,6 +115,76 @@ class AppStore extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ━━━ DIARY ━━━
+  final List<DiaryEntry> _diary = [
+    DiaryEntry(
+      id: 'diary_1',
+      text: 'Had the most wonderful walk through the park today. The cherry blossoms are starting to bloom and everything feels so fresh and full of promise. Stopped at that little cafe on the corner and tried their new lavender latte — surprisingly lovely!',
+      date: DateTime.now().subtract(const Duration(days: 2)),
+      linkedMoodId: '1',
+    ),
+    DiaryEntry(
+      id: 'diary_2',
+      text: 'Quiet morning. Made myself a big cup of tea and just watched the rain from the window. Sometimes doing nothing is the most peaceful thing. I think I needed this kind of day.',
+      date: DateTime.now().subtract(const Duration(days: 1)),
+      linkedMoodId: '2',
+    ),
+    DiaryEntry(
+      id: 'diary_3',
+      text: 'Started sketching again after weeks of putting it off. It felt rusty at first but then something clicked and I lost track of time. Need to remember that the hardest part is always just beginning.',
+      date: DateTime.now().subtract(const Duration(days: 4)),
+    ),
+  ];
+
+  List<DiaryEntry> get diaryEntries {
+    final sorted = List<DiaryEntry>.from(_diary);
+    sorted.sort((a, b) => b.date.compareTo(a.date));
+    return List.unmodifiable(sorted);
+  }
+
+  DiaryEntry? getDiaryForDate(DateTime date) {
+    try {
+      return _diary.firstWhere((d) =>
+        d.date.day == date.day && d.date.month == date.month && d.date.year == date.year);
+    } catch (_) { return null; }
+  }
+
+  MoodEntry? getMoodForDate(DateTime date) {
+    try {
+      return _moods.firstWhere((m) =>
+        m.createdAt.day == date.day && m.createdAt.month == date.month && m.createdAt.year == date.year);
+    } catch (_) { return null; }
+  }
+
+  MoodEntry? getMoodById(String id) {
+    try {
+      return _moods.firstWhere((m) => m.id == id);
+    } catch (_) { return null; }
+  }
+
+  void saveDiary(String text, DateTime date) {
+    final existing = getDiaryForDate(date);
+    final todayMood = getMoodForDate(date);
+    if (existing != null) {
+      final i = _diary.indexWhere((d) => d.id == existing.id);
+      if (i >= 0) {
+        _diary[i] = existing.copyWith(
+          text: text,
+          linkedMoodId: todayMood?.id ?? existing.linkedMoodId,
+        );
+      }
+    } else {
+      _diary.insert(0, DiaryEntry(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        text: text,
+        date: date,
+        linkedMoodId: todayMood?.id,
+      ));
+      _earnXP(10);
+    }
+    notifyListeners();
+  }
+
   // ━━━ GOALS ━━━
   final List<Goal> _goals = [
     Goal(id: '1', title: 'Read 12 books', target: 12, current: 7, color: const Color(0xFF7C4DFF), createdAt: DateTime.now()),
