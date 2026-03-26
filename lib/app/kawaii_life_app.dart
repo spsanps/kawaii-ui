@@ -52,7 +52,6 @@ class _KawaiiLifeHomeState extends State<KawaiiLifeHome> {
       TasksScreen(store: _store),
       MoodScreen(store: _store),
       GoalsScreen(store: _store),
-      DiaryScreen(store: _store),
     ];
   }
 
@@ -75,7 +74,6 @@ class _KawaiiLifeHomeState extends State<KawaiiLifeHome> {
               badge: incompleteTasks > 0 ? incompleteTasks : null),
             KawaiiNavItem(icon: kawaiiIcon(const MoonPainter(), size: 22), label: 'Mood'),
             KawaiiNavItem(icon: kawaiiIcon(const Star4Painter(), size: 22), label: 'Goals'),
-            KawaiiNavItem(icon: kawaiiIcon(const PenPainter(), size: 22), label: 'Diary'),
           ],
         );
       },

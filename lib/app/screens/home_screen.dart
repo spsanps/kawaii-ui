@@ -4,6 +4,7 @@ import 'package:kawaii_ui/kawaii_ui.dart';
 
 import '../models/models.dart';
 import '../models/store.dart';
+import 'diary_screen.dart';
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  HOME / DASHBOARD SCREEN — award-winning edition
@@ -66,7 +67,7 @@ class HomeScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(
                   horizontal: KawaiiSpacing.page),
-              child: const _QuickActions(),
+              child: _QuickActions(store: store),
             ),
           ),
 
@@ -749,7 +750,8 @@ class _RingPainter extends CustomPainter {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 class _QuickActions extends StatelessWidget {
-  const _QuickActions();
+  final AppStore store;
+  const _QuickActions({required this.store});
 
   @override
   Widget build(BuildContext context) {
@@ -768,6 +770,11 @@ class _QuickActions extends StatelessWidget {
         Expanded(
           child: KawaiiButton.green('Goal', small: true,
             onTap: () {}),
+        ),
+        const SizedBox(width: KawaiiSpacing.md),
+        Expanded(
+          child: KawaiiButton.gold('Diary', small: true,
+            onTap: () => openDiary(context, store)),
         ),
       ],
     );
