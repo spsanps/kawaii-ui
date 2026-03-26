@@ -555,10 +555,10 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
                   )
                 : Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: KawaiiSpacing.xxl, top: KawaiiSpacing.md),
-                    child: KawaiiButton.pink('Add New Task', hero: true,
-                      i: kawaiiIcon(const Star4Painter(), size: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: KawaiiSpacing.xl, vertical: KawaiiSpacing.md),
+                    child: KawaiiButton.pink('Add New Task',
+                      small: true,
                       onTap: () => setState(() => _showingAddForm = true)),
                   ),
             ),
