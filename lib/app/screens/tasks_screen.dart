@@ -64,19 +64,7 @@ class _TasksScreenState extends State<TasksScreen> {
   }
 
   void _onToggleTask(TodoTask task) {
-    final wasDone = task.done;
     widget.store.toggleTask(task.id);
-    if (!wasDone) {
-      setState(() => _recentlyCompleted.add(task.id));
-      Future.delayed(const Duration(milliseconds: 1200), () {
-        if (mounted) setState(() => _recentlyCompleted.remove(task.id));
-      });
-      showKawaiiSnackbar(
-        context: context,
-        message: 'Nice! "${task.title}" done!',
-        type: KawaiiSnackbarType.success,
-      );
-    }
   }
 
   void _confirmDelete(TodoTask task) {
@@ -1008,85 +996,40 @@ class _TaskCard extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             // Card body
+            // Kawaii task pill — tinted by category, glossy, no left stripe
             KawaiiSurface(tactile: false,
-              gloss: GlossLevel.subtle,
-              shineOpacity: isDone ? 0.18 : 0.35,
-              shineHeight: 0.40,
+              gloss: isDone ? GlossLevel.subtle : GlossLevel.medium,
+              shineOpacity: isDone ? 0.15 : 0.30,
+              shineHeight: 0.36,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(KawaiiBorderRadius.lg),
-                gradient: const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xA6FFFFFF), Color(0x73FFF8FC)],
-                ),
+                borderRadius: BorderRadius.circular(KawaiiBorderRadius.xl),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter, end: Alignment.bottomCenter,
+                  colors: [
+                    catColor.withValues(alpha: isDone ? 0.06 : 0.12),
+                    catColor.withValues(alpha: isDone ? 0.02 : 0.05),
+                  ]),
                 border: Border.all(
-                  color: KawaiiColors.cardBorder
-                      .withValues(alpha: KawaiiOpacity.hint),
-                  width: KawaiiBorderWidth.light,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: KawaiiColors.glass.withValues(
-                        alpha: KawaiiOpacity.ghost),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  )
-                ],
+                  color: catColor.withValues(alpha: isDone ? 0.06 : 0.14),
+                  width: KawaiiBorderWidth.light),
+                boxShadow: [BoxShadow(
+                  color: catColor.withValues(alpha: isDone ? 0.02 : 0.06),
+                  blurRadius: 10, offset: const Offset(0, 3))],
               ),
-              child: SizedBox(
-                height: 80,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                  // Left accent stripe
-                  Container(
-                    width: 4,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topLeft:
-                            Radius.circular(KawaiiBorderRadius.lg),
-                        bottomLeft:
-                            Radius.circular(KawaiiBorderRadius.lg),
-                      ),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          catColor.withValues(
-                              alpha: isDone ? 0.3 : 0.8),
-                          catColor.withValues(
-                              alpha: isDone ? 0.15 : 0.5),
-                        ],
-                      ),
-                    ),
-                  ),
+              child: Row(
+                children: [
+                  // Checkbox
+                  KawaiiCheckbox(value: isDone, color: catColor,
+                    onChanged: (_) => onToggle()),
+                  const SizedBox(width: KawaiiSpacing.lg),
 
-                  // Content area
+                  // Title + category tag
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                          12, 12, 15, 12),
-                      child: Row(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.center,
-                        children: [
-                          // Checkbox
-                          KawaiiCheckbox(
-                            value: isDone,
-                            color: catColor,
-                            onChanged: (_) => onToggle(),
-                          ),
-                          const SizedBox(width: KawaiiSpacing.lg),
-
-                          // Title + meta
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Title with strikethrough
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
                                 AnimatedDefaultTextStyle(
                                   duration:
                                       const Duration(
@@ -1132,10 +1075,6 @@ class _TaskCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                ]),
-              ),
             ),
 
             // Sparkle burst overlay on completion
