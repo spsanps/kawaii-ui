@@ -361,8 +361,6 @@ class _TasksScreenState extends State<TasksScreen> {
                 kawaiiIcon(const CheckPainter(color: KawaiiColors.heading), size: 20),
                 const SizedBox(width: KawaiiSpacing.md),
                 Text('Tasks', style: kHeading(size: 22)),
-                const Spacer(),
-                KawaiiButton.pink('+ New', small: true, onTap: _showAddDialog),
               ]),
             ),
 
@@ -376,7 +374,13 @@ class _TasksScreenState extends State<TasksScreen> {
                 total: totalAll,
               ),
             ),
-            const SizedBox(height: KawaiiSpacing.lg),
+            const SizedBox(height: KawaiiSpacing.xl),
+
+            // ── Add button (like goals) ──
+            Center(child: KawaiiButton.pink('+ New Task', hero: true,
+              i: kawaiiIcon(const Star4Painter(), size: 16),
+              onTap: _showAddDialog)),
+            const SizedBox(height: KawaiiSpacing.xl),
 
             // ── Category filter pills ──
             SizedBox(
