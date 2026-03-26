@@ -347,7 +347,25 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      floatingActionButton: _showingAddForm ? null : KawaiiPressable(
+        sound: KawaiiSound.pop,
+        onTap: () => setState(() => _showingAddForm = true),
+        child: Container(
+          width: 56, height: 56,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter, end: Alignment.bottomCenter,
+              colors: [KawaiiColors.pinkTop, KawaiiColors.pinkBottom]),
+            border: Border.all(color: KawaiiColors.pinkStroke, width: KawaiiBorderWidth.thick),
+            boxShadow: [KawaiiShadows.deep(KawaiiColors.pinkStroke)]),
+          child: const Center(child: Text('+', style: TextStyle(
+            fontSize: 28, fontWeight: FontWeight.w400, color: Colors.white, height: 1))),
+        ),
+      ),
+      body: ListenableBuilder(
         listenable: widget.store,
         builder: (context, _) {
           final filtered =
@@ -498,54 +516,51 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
             ),
 
-            // ── Bottom add section ──
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                KawaiiSpacing.xl, KawaiiSpacing.xl, KawaiiSpacing.xl, KawaiiSpacing.xxl),
-              child: _showingAddForm
-                ? Column(mainAxisSize: MainAxisSize.min, children: [
-                    KawaiiTextField(
-                      placeholder: 'What needs doing?',
-                      controller: _addTitleCtrl,
-                      color: _addCategory.color),
-                    const SizedBox(height: KawaiiSpacing.md),
-                    Wrap(spacing: 6, runSpacing: 6, children: TaskCategory.values.map((cat) {
-                      final sel = cat == _addCategory;
-                      return KawaiiPressable(pressScale: 0.92, pressTranslateY: 2,
-                        onTap: () => setState(() => _addCategory = cat),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(KawaiiBorderRadius.md),
-                            gradient: sel ? LinearGradient(colors: [cat.accent, cat.color]) : null,
-                            color: sel ? null : cat.color.withValues(alpha: KawaiiOpacity.whisper),
-                            border: Border.all(color: cat.color.withValues(alpha: sel ? 0.5 : 0.15))),
-                          child: Text(cat.label, style: kBody(size: 11, weight: FontWeight.w800,
-                            color: sel ? Colors.white : cat.color))));
-                    }).toList()),
-                    const SizedBox(height: KawaiiSpacing.md),
-                    Row(children: [
-                      Expanded(child: KawaiiButton.pink('Add', onTap: () {
-                        final title = _addTitleCtrl.text.trim();
-                        if (title.isEmpty) return;
-                        widget.store.addTask(title, _addCategory);
-                        _addTitleCtrl.clear();
-                        setState(() => _showingAddForm = false);
-                      })),
-                      const SizedBox(width: KawaiiSpacing.md),
-                      KawaiiButton.green('Cancel', small: true, onTap: () {
-                        _addTitleCtrl.clear();
-                        setState(() => _showingAddForm = false);
-                      }),
-                    ]),
-                  ])
-                : Center(child: KawaiiButton.pink('Add New Task', hero: true,
-                    i: kawaiiIcon(const Star4Painter(), size: 16),
-                    onTap: () => setState(() => _showingAddForm = true))),
-            ),
+            // ── Add form (inline, shown when FAB tapped) ──
+            if (_showingAddForm)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  KawaiiSpacing.xl, KawaiiSpacing.md, KawaiiSpacing.xl, KawaiiSpacing.xxl),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  KawaiiTextField(
+                    placeholder: 'What needs doing?',
+                    controller: _addTitleCtrl,
+                    color: _addCategory.color),
+                  const SizedBox(height: KawaiiSpacing.md),
+                  Wrap(spacing: 6, runSpacing: 6, children: TaskCategory.values.map((cat) {
+                    final sel = cat == _addCategory;
+                    return KawaiiPressable(pressScale: 0.92, pressTranslateY: 2,
+                      onTap: () => setState(() => _addCategory = cat),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(KawaiiBorderRadius.md),
+                          gradient: sel ? LinearGradient(colors: [cat.accent, cat.color]) : null,
+                          color: sel ? null : cat.color.withValues(alpha: KawaiiOpacity.whisper),
+                          border: Border.all(color: cat.color.withValues(alpha: sel ? 0.5 : 0.15))),
+                        child: Text(cat.label, style: kBody(size: 11, weight: FontWeight.w800,
+                          color: sel ? Colors.white : cat.color))));
+                  }).toList()),
+                  const SizedBox(height: KawaiiSpacing.md),
+                  Row(children: [
+                    Expanded(child: KawaiiButton.pink('Add', onTap: () {
+                      final title = _addTitleCtrl.text.trim();
+                      if (title.isEmpty) return;
+                      widget.store.addTask(title, _addCategory);
+                      _addTitleCtrl.clear();
+                      setState(() => _showingAddForm = false);
+                    })),
+                    const SizedBox(width: KawaiiSpacing.md),
+                    KawaiiButton.green('Cancel', small: true, onTap: () {
+                      _addTitleCtrl.clear();
+                      setState(() => _showingAddForm = false);
+                    }),
+                  ]),
+                ]),
+              ),
           ]);
         },
-    );
+    ));
   }
 }
 
