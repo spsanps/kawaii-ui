@@ -19,8 +19,8 @@ class _C {
 
 void openDiary(BuildContext context, AppStore store) {
   Navigator.of(context).push(PageRouteBuilder(
-    transitionDuration: const Duration(milliseconds: 300),
-    reverseTransitionDuration: const Duration(milliseconds: 200),
+    transitionDuration: const Duration(milliseconds: 150),
+    reverseTransitionDuration: const Duration(milliseconds: 100),
     pageBuilder: (ctx, anim, _) => _DiaryPage(store: store),
     transitionsBuilder: (ctx, anim, _, child) => FadeTransition(
       opacity: anim,
@@ -95,14 +95,11 @@ class _DiaryPageState extends State<_DiaryPage> {
           ),
 
           // ── Pages ──
-          Expanded(child: ListenableBuilder(
-            listenable: widget.store,
-            builder: (ctx, _) => PageView.builder(
-              controller: _pageCtrl,
-              itemCount: _dates.length,
-              onPageChanged: (i) => setState(() => _current = i),
-              itemBuilder: (ctx, i) => _Page(date: _dates[i], store: widget.store),
-            ),
+          Expanded(child: PageView.builder(
+            controller: _pageCtrl,
+            itemCount: _dates.length,
+            onPageChanged: (i) => setState(() => _current = i),
+            itemBuilder: (ctx, i) => _Page(date: _dates[i], store: widget.store),
           )),
 
           // ── Footer ──
@@ -135,9 +132,12 @@ class _Page extends StatefulWidget {
   State<_Page> createState() => _PageState();
 }
 
-class _PageState extends State<_Page> {
+class _PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
   late TextEditingController _ctrl;
   bool _dirty = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -167,6 +167,7 @@ class _PageState extends State<_Page> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // required by AutomaticKeepAliveClientMixin
     final mood = widget.store.getMoodForDate(widget.date);
 
     return Padding(
