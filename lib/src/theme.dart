@@ -41,8 +41,8 @@ class KawaiiColors {
   static const blueShadow = Color(0x381976D2);
 
   // Semantics
-  static const heading = Color(0xFF3E1E2C);
-  static const body = Color(0xFF6D4C5E);
+  static const heading = Color(0xFF5D3A4A);  // warm brown, not harsh black
+  static const body = Color(0xFF7D5A6C);
   static const muted = Color(0xFF9D7088);
   static const subtle = Color(0xFFB898A8);
   static const ownBubbleText = Color(0xFF6D5A64);
