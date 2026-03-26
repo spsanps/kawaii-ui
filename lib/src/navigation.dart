@@ -101,9 +101,8 @@ class KawaiiBottomNavBar extends StatelessWidget {
                   return Expanded(
                     child: KawaiiPressable(
                       pressScale: KawaiiTokens.pressScale,
-                      pressTranslateY: KawaiiTokens.pressTranslateY,
+                      pressTranslateY: KawaiiTokens.pressTranslateY, sound: KawaiiSound.tick,
                       onTap: () {
-                        SoundGate.instance.tryPlay(KawaiiSound.tick);
                         onTap(i);
                       },
                       child: SizedBox.expand(
@@ -255,9 +254,8 @@ class KawaiiTabBar extends StatelessWidget {
                   return Expanded(
                     child: KawaiiPressable(
                       pressScale: KawaiiTokens.pressScale,
-                      pressTranslateY: 1.0,
+                      pressTranslateY: 1.0, sound: KawaiiSound.tick,
                       onTap: () {
-                        SoundGate.instance.tryPlay(KawaiiSound.tick);
                         onChanged(i);
                       },
                       child: Center(
