@@ -51,22 +51,21 @@ class KawaiiButton extends StatelessWidget {
   final bool hero, small;
   final Widget? icon;
   final VoidCallback? onTap;
-  final bool playSound;
 
   const KawaiiButton({super.key, required this.label, required this.colors,
     this.hero = false, this.small = false, this.icon, this.onTap,
-    this.playSound = true});
+    });
 
-  factory KawaiiButton.pink(String l, {bool hero = false, bool small = false, Widget? i, VoidCallback? onTap, Key? key, bool playSound = true}) =>
-      KawaiiButton(key: key, label: l, colors: KawaiiButtonColors.pink, hero: hero, small: small, icon: i, onTap: onTap, playSound: playSound);
-  factory KawaiiButton.violet(String l, {bool hero = false, bool small = false, Widget? i, VoidCallback? onTap, Key? key, bool playSound = true}) =>
-      KawaiiButton(key: key, label: l, colors: KawaiiButtonColors.violet, hero: hero, small: small, icon: i, onTap: onTap, playSound: playSound);
-  factory KawaiiButton.green(String l, {bool hero = false, bool small = false, Widget? i, VoidCallback? onTap, Key? key, bool playSound = true}) =>
-      KawaiiButton(key: key, label: l, colors: KawaiiButtonColors.green, hero: hero, small: small, icon: i, onTap: onTap, playSound: playSound);
-  factory KawaiiButton.gold(String l, {bool hero = false, bool small = false, Widget? i, VoidCallback? onTap, Key? key, bool playSound = true}) =>
-      KawaiiButton(key: key, label: l, colors: KawaiiButtonColors.gold, hero: hero, small: small, icon: i, onTap: onTap, playSound: playSound);
-  factory KawaiiButton.blue(String l, {bool hero = false, bool small = false, Widget? i, VoidCallback? onTap, Key? key, bool playSound = true}) =>
-      KawaiiButton(key: key, label: l, colors: KawaiiButtonColors.blue, hero: hero, small: small, icon: i, onTap: onTap, playSound: playSound);
+  factory KawaiiButton.pink(String l, {bool hero = false, bool small = false, Widget? i, VoidCallback? onTap, Key? key}) =>
+      KawaiiButton(key: key, label: l, colors: KawaiiButtonColors.pink, hero: hero, small: small, icon: i, onTap: onTap);
+  factory KawaiiButton.violet(String l, {bool hero = false, bool small = false, Widget? i, VoidCallback? onTap, Key? key}) =>
+      KawaiiButton(key: key, label: l, colors: KawaiiButtonColors.violet, hero: hero, small: small, icon: i, onTap: onTap);
+  factory KawaiiButton.green(String l, {bool hero = false, bool small = false, Widget? i, VoidCallback? onTap, Key? key}) =>
+      KawaiiButton(key: key, label: l, colors: KawaiiButtonColors.green, hero: hero, small: small, icon: i, onTap: onTap);
+  factory KawaiiButton.gold(String l, {bool hero = false, bool small = false, Widget? i, VoidCallback? onTap, Key? key}) =>
+      KawaiiButton(key: key, label: l, colors: KawaiiButtonColors.gold, hero: hero, small: small, icon: i, onTap: onTap);
+  factory KawaiiButton.blue(String l, {bool hero = false, bool small = false, Widget? i, VoidCallback? onTap, Key? key}) =>
+      KawaiiButton(key: key, label: l, colors: KawaiiButtonColors.blue, hero: hero, small: small, icon: i, onTap: onTap);
 
   double get _h => small ? 32 : hero ? 50 : 40;
   double get _fs => small ? 11.5 : hero ? 14.5 : 13;
@@ -183,10 +182,9 @@ class KawaiiBadge extends StatelessWidget {
   final Color bg, border;
   final double size;
   final bool interactive;
-  final bool playSound;
   const KawaiiBadge({super.key, required this.child,
     this.bg = const Color(0xFFFFF0F5), this.border = const Color(0xFFE8C0D8),
-    this.size = 46, this.interactive = false, this.playSound = true});
+    this.size = 46, this.interactive = false});
 
   @override
   Widget build(BuildContext context) {
@@ -213,9 +211,8 @@ class KawaiiTag extends StatelessWidget {
   final String text;
   final Color color;
   final bool interactive;
-  final bool playSound;
   const KawaiiTag(this.text, {super.key, this.color = const Color(0xFFD0688A),
-    this.interactive = false, this.playSound = true});
+    this.interactive = false});
 
   @override
   Widget build(BuildContext context) {
@@ -244,10 +241,9 @@ class KawaiiAvatar extends StatelessWidget {
   final bool status;
   final String? name;
   final bool interactive;
-  final bool playSound;
   const KawaiiAvatar({super.key, required this.icon, required this.color,
     this.accent, this.size = 44, this.status = false, this.name,
-    this.interactive = false, this.playSound = true});
+    this.interactive = false});
 
   @override
   Widget build(BuildContext context) {
@@ -286,9 +282,8 @@ class KawaiiStat extends StatefulWidget {
   final int value;
   final String label;
   final Color color;
-  final bool playSound;
   const KawaiiStat({super.key, required this.value, required this.label, required this.color,
-    this.playSound = true});
+    });
   @override
   State<KawaiiStat> createState() => _KawaiiStatState();
 }
@@ -405,9 +400,8 @@ class _KawaiiProgressState extends State<KawaiiProgress> with SingleTickerProvid
 class KawaiiToggle extends StatefulWidget {
   final String label;
   final Color color;
-  final bool playSound;
   const KawaiiToggle({super.key, required this.label, this.color = const Color(0xFFF08CAE),
-    this.playSound = true});
+    });
   @override
   State<KawaiiToggle> createState() => _KawaiiToggleState();
 }
@@ -631,8 +625,7 @@ class KawaiiInput extends StatelessWidget {
         )),
         const SizedBox(width: KawaiiSpacing.md),
         KawaiiButton.pink(btnLabel, small: true,
-          i: kawaiiIcon(const SendPainter(color: KawaiiColors.pinkText), size: 12),
-          onTap: () => SoundGate.instance.tryPlay(KawaiiSound.send)),
+          i: kawaiiIcon(const SendPainter(color: KawaiiColors.pinkText), size: 12)),
       ]),
     );
   }
@@ -685,10 +678,9 @@ class KawaiiNotification extends StatelessWidget {
   final String title, text, time;
   final Color color;
   final Widget icon;
-  final bool playSound;
   const KawaiiNotification({super.key, required this.title, required this.text,
     required this.color, required this.icon, this.time = 'just now',
-    this.playSound = true});
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -737,10 +729,9 @@ class SoundCard extends StatelessWidget {
   final String label, id, desc;
   final Color color, accent;
   final KawaiiSound sound;
-  final bool playSound;
   const SoundCard({super.key, required this.label, required this.id, required this.desc,
     required this.color, required this.accent, required this.sound,
-    this.playSound = true});
+    });
 
   @override
   Widget build(BuildContext context) {
