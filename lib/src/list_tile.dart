@@ -35,9 +35,10 @@ class KawaiiListTile extends StatelessWidget {
     final hPad = dense ? 12.0 : 15.0;
 
     final tile = KawaiiSurface(
+      tactile: false, // container with interactive children — no bounce/sound
       gloss: GlossLevel.subtle,
-      shineOpacity: 0.35,
-      shineHeight: 0.40,
+      shineOpacity: 0.0,  // white/glass cards don't need shine
+      shineHeight: 0.0,
       padding: EdgeInsets.symmetric(horizontal: hPad, vertical: vPad),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(KawaiiBorderRadius.lg),

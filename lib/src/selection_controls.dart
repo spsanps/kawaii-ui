@@ -20,7 +20,7 @@ class KawaiiCheckbox extends StatefulWidget {
     required this.value,
     this.onChanged,
     this.color = const Color(0xFFF08CAE),
-    this.size = 24,
+    this.size = 28,
   });
 
   @override
