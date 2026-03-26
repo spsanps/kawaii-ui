@@ -500,7 +500,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
             ),
 
-            const SizedBox(height: 70),
+            // No spacer — button floats over content
           ]),
 
             // ── Floating button — just the pill, transparent around it ──
