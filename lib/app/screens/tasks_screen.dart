@@ -848,14 +848,35 @@ class _TaskCardEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDone = task.done;
     return Padding(
       padding: const EdgeInsets.only(bottom: KawaiiSpacing.md),
-      child: _TaskCard(
-        task: task,
-        showSparkle: recentlyCompleted.contains(task.id),
-        onToggle: () => onToggle(task),
-        onDelete: () => onDelete(task),
-        timeAgo: timeAgo(task.createdAt),
+      child: Dismissible(
+        key: ValueKey(task.id),
+        direction: DismissDirection.endToStart,
+        confirmDismiss: (_) async { onDelete(task); return false; },
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+          child: Text('Delete', style: kBody(size: 12, weight: FontWeight.w800,
+            color: const Color(0xFFE57373)))),
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 200),
+          opacity: isDone ? 0.55 : 1.0,
+          child: KawaiiListTile(
+            leading: KawaiiCheckbox(
+              value: isDone,
+              color: task.category.color,
+              onChanged: (_) => onToggle(task)),
+            title: Text(task.title,
+              style: kBody(size: 13, weight: FontWeight.w700,
+                color: isDone ? KawaiiColors.muted : KawaiiColors.heading,
+              ).copyWith(
+                decoration: isDone ? TextDecoration.lineThrough : null,
+                decorationColor: KawaiiColors.muted)),
+            trailing: KawaiiTag(task.category.label, color: task.category.color),
+          ),
+        ),
       ),
     );
   }
